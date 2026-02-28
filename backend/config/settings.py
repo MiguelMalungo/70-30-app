@@ -32,11 +32,14 @@ INSTALLED_APPS = [
     'rest_framework',
     'drf_yasg',
     'django_filters',
+    'corsheaders',
 
     # Local apps
     'users',
     'core',
     'skills',
+    'bookings',
+    'reviews',
 ]
 
 # Conditionally add GeoDjango if using PostGIS
@@ -53,6 +56,7 @@ if not GDAL_LIBRARY_PATH and os.name == 'posix':
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -165,7 +169,18 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ),
     'EXCEPTION_HANDLER': 'core.exceptions.core_exception_handler',
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle'
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '100/day',
+        'user': '1000/day'
+    }
 }
+
+# CORS Settings
+CORS_ALLOW_ALL_ORIGINS = True # For development only
 
 # Swagger Settings
 SWAGGER_SETTINGS = {

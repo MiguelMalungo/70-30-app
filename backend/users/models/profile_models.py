@@ -28,7 +28,7 @@ class Profile(models.Model):
         help_text=_("Only for Mentors")
     )
     # Use gis_models.PointField which falls back to MockPointField if GIS libraries are missing
-    location = gis_models.PointField(_("Location"), blank=True, null=True)
+    location = gis_models.PointField(_("Location"), blank=True, null=True, geography=True)
     
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

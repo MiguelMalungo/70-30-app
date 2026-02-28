@@ -3,6 +3,7 @@ from django.urls import path, include, re_path
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
+from skills.views import MentorSearchView
 
 schema_view = get_schema_view(
    openapi.Info(
@@ -23,6 +24,9 @@ urlpatterns = [
     # Auth Endpoints
     path('api/auth/', include('users.urls')),
     path('api/skills/', include('skills.urls')),
+    path('api/bookings/', include('bookings.urls')),
+    path('api/reviews/', include('reviews.urls')),
+    path('api/mentors/search/', MentorSearchView.as_view(), name='mentor-search'),
 
     # Swagger Documentation
     re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),

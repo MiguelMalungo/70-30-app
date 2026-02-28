@@ -26,8 +26,8 @@ All tasks and features implemented in this project must adhere to the following 
 | **Sprint 1** | Jan 05 - Jan 11 | **Foundation & Auth** | Docker Setup, Backend Auth (JWT, User Types: Mentor/Mentee/Admin), Frontend Login/Register UI. |
 | **Sprint 2** | Jan 12 - Jan 18 | **Profiles & Location** | Profile CRUD, User Location (PostGIS), Frontend Dashboard & Profile Mgmt. |
 | **Sprint 3** | Jan 19 - Jan 25 | **Core Arch & Skills** | **Core App** (Shared Utils), Skill Taxonomy, Discovery APIs, Map-based Mentor Search. |
-| **Sprint 4** | Jan 26 - Feb 01 | **Booking & Connections** | Booking Request Flow, Calendar Integration, Scheduling UI. |
-| **Sprint 5** | Feb 02 - Feb 08 | **Trust & Social** | Reviews/Ratings System, Admin Moderation Tools, Social UI Components. |
+| **Sprint 4** | Jan 26 - Feb 01 | **Booking & Connections** | Booking Request Flow, Calendar Integration. (Frontend Pending) |
+| **Sprint 5** | Feb 02 - Feb 08 | **Trust & Social** | Backed: Reviews/Ratings, Admin Tools. (Frontend Pending) |
 | **Sprint 6** | Feb 09 - Feb 15 | **Polish & Launch Prep** | Performance Tuning (Redis), E2E Testing, CI/CD Scripts, Final Documentation. |
 
 ---
@@ -58,36 +58,36 @@ All tasks and features implemented in this project must adhere to the following 
   - [ ] Profile Edit Page (Upload Avatar, Bio).
   - [ ] Integration with Maps (e.g., Leaflet) to set "My Location".
 
-### Sprint 3: Core Architecture & Skills Engine (Current)
+### Sprint 3: Core Architecture & Skills Engine (Completed)
 **Goal**: Establish shared foundations and Connect Demand with Supply.
 - **Backend - Core App**:
-  - Centralized Error Handling (Exceptions).
-  - Base Models/Mixins (TimeStampedModel).
-  - Shared Utilities (Response formatters).
+  - [x] Centralized Error Handling (Exceptions).
+  - [x] Base Models/Mixins (TimeStampedModel).
+  - [x] Shared Utilities (Response formatters).
 - **Backend - Skills App**:
-  - `Skill` and `UserSkill` models.
-  - Discovery API: Filter by Skill, Radius (Distance), and Availability.
-  - Admin API: Manage Skill Categories.
-- **Frontend**:
-  - Homepage "Find a Mentor" Search Bar.
-  - Search Results Page with Map View (Pins for Mentors).
-  - Mentor Public Profile View.
+  - [x] `Skill` and `UserSkill` models.
+  - [x] Discovery API: Filter by Skill, Radius (Distance), and Availability.
+  - [x] Admin API: Manage Skill Categories.
+- **Frontend** (Deferred to later sprints):
+  - [ ] Homepage "Find a Mentor" Search Bar.
+  - [ ] Search Results Page with Map View (Pins for Mentors).
+  - [ ] Mentor Public Profile View.
 
-### Sprint 4: Booking & Scheduling System
+### Sprint 4: Booking & Scheduling System (Backend Completed)
 **Goal**: Facilitate the Meeting.
 - **Backend**:
-  - `Booking` model (Status: Pending, Accepted, Rejected, Completed).
-  - Email Notifications (Console backend for dev).
+  - [x] `Booking` model (Status: Pending, Accepted, Rejected, Completed).
+  - [ ] Email Notifications (Console backend for dev).
 - **Frontend**:
   - "Book Session" Modal on Mentor Profile.
   - "My Bookings" List (Incoming/Outgoing requests).
   - Status Management Actions (Accept/Decline buttons).
 
-### Sprint 5: Trust & Social
+### Sprint 5: Trust & Social (Backend Completed)
 **Goal**: Safety and Reputation.
 - **Backend**:
-  - `Review` model (Rating, Comment).
-  - Admin Dashboard APIs (stats, user management).
+  - [x] `Review` model (Rating, Comment).
+  - [x] Admin Dashboard APIs (stats, user management).
 - **Frontend**:
   - Rate User Component.
   - Profile Reviews Section.

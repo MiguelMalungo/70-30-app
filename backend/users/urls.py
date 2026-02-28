@@ -1,9 +1,20 @@
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
-from .views import RegisterView, LogoutView, UserProfileView, LocationUpdateView
+from .views import (
+    RegisterView, 
+    LogoutView, 
+    UserProfileView, 
+    LocationUpdateView,
+    AdminUserViewSet,
+    AdminStatsView
+)
+
+router = DefaultRouter()
+router.register(r'admin/users', AdminUserViewSet, basename='admin-user')
 
 urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),
@@ -13,4 +24,7 @@ urlpatterns = [
     
     path('profile/me/', UserProfileView.as_view(), name='profile-me'),
     path('profile/location/', LocationUpdateView.as_view(), name='profile-location'),
+    
+    path('admin/stats/', AdminStatsView.as_view(), name='admin-stats'),
+    path('', include(router.urls)),
 ]

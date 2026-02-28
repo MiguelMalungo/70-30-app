@@ -40,6 +40,12 @@ To provide purpose and occupation for retired seniors while preserving tradition
 ### Default Credentials
 - **Superuser**: `admin` / `admin`
 
+### 🔧 Reset Admin Password
+If you forget the admin password, you can reset it using the following Docker command:
+```bash
+docker exec 70-30-grandpa-backend python manage.py shell -c "from django.contrib.auth import get_user_model; User = get_user_model(); u = User.objects.get(username='admin'); u.set_password('new_password'); u.save();"
+```
+
 ## 📂 Project Structure
 
 ```
