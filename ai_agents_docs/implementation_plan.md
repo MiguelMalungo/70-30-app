@@ -21,18 +21,19 @@ All tasks and features implemented in this project must adhere to the following 
 
 ## Roadmap Overview
 
-| Sprint | Dates | Focus Area | Key Deliverables |
+### Unified Roadmap Overview
+| Sprint | Dates | Backend Focus | Frontend Focus |
 | :--- | :--- | :--- | :--- |
-| **Sprint 1** | Jan 05 - Jan 11 | **Foundation & Auth** | Docker Setup, Backend Auth (JWT, User Types: Mentor/Mentee/Admin), Frontend Login/Register UI. |
-| **Sprint 2** | Jan 12 - Jan 18 | **Profiles & Location** | Profile CRUD, User Location (PostGIS), Frontend Dashboard & Profile Mgmt. |
-| **Sprint 3** | Jan 19 - Jan 25 | **Core Arch & Skills** | **Core App** (Shared Utils), Skill Taxonomy, Discovery APIs, Map-based Mentor Search. |
-| **Sprint 4** | Jan 26 - Feb 01 | **Booking & Connections** | Booking Request Flow, Calendar Integration. (Frontend Pending) |
-| **Sprint 5** | Feb 02 - Feb 08 | **Trust & Social** | Backed: Reviews/Ratings, Admin Tools. (Frontend Pending) |
-| **Sprint 6** | Feb 09 - Feb 15 | **Polish & Launch Prep** | Performance Tuning (Redis), E2E Testing, CI/CD Scripts, Final Documentation. |
+| **Sprint 1** | Jan 05 - Jan 11 | Docker Setup, Auth (JWT, User Types) | Foundation & Architecture (Router, CSS, Folders, Placeholders) |
+| **Sprint 2** | Jan 12 - Jan 18 | Profiles, Location (PostGIS) | Auth & Onboarding (Roles Selection, Global State) |
+| **Sprint 3** | Jan 19 - Jan 25 | Skill Taxonomy, Discovery APIs | Client Experience (Wizard, Escrow UI, Client Dashboard) |
+| **Sprint 4** | Jan 26 - Feb 01 | Booking Request Flow, Calendar | Professional Dashboard (Kanban, Gig Applications, Payout UI) |
+| **Sprint 5** | Feb 02 - Feb 08 | Reviews/Ratings, Admin Tools | Social Network & Trust Engine (Community Hub, Messaging, Ratings) |
+| **Sprint 6** | Feb 09 - Feb 15 | Redis Caching, Rate Limiting | Admin Dashboard, Polish (Animations, Responsive QA, E2E) |
 
 ---
 
-## Detailed Sprint Breakdown
+## Detailed Backend Sprint Breakdown
 
 ### Sprint 1: Foundation & Infrastructure
 **Goal**: Operational Stack with authenticated Frontend & Backend.

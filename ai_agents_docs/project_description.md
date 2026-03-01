@@ -1,7 +1,10 @@
 # 70-30 Project Documentation
 
 ## 1. Executive Summary
-**70-30** is a social impact platform designed to foster intergenerational connection and knowledge transfer. The core philosophy is to value the accumulated wisdom of senior citizens (70+)—who may be retired but still seek purpose—by connecting them with younger generations (30s and younger) eager to learn traditional trades and professional skills.
+**70-30** is a POC social impact platform designed to bridge the generational employment gap. The core philosophy is to pair highly skilled, retired individuals ("Masters") with young learners ("Apprentices") to provide services to "Clients". 
+
+For example, if a Client needs a room painted, they post the task (or select the category). The platform matches a Master and an Apprentice to perform the task together as a duo. 
+Payments are split fairly (e.g., 50% to the platform/fees, 25% to the Master, 25% to the Apprentice). Beyond the gig economy, the platform acts as a social network, allowing Masters and Apprentices to connect, message, rate one another, and transfer knowledge, providing job opportunities at both ends of the age spectrum.
 
 ## 2. Quick Start Guide
 **How to start the project locally:**
@@ -50,6 +53,7 @@
 - **Documentation**: Handled in `ai_agents_docs/`.
 
 ## 5. Core User Roles
-1. **Mentor**: Senior experts sharing knowledge.
-2. **Mentee**: Juniors seeking knowledge.
-3. **Admin**: Platform moderators ensuring safety and quality.
+1. **Client**: The end-user requesting and paying for services (e.g., event photography, house services, animal care), viewing estimates, and providing prepayments in escrow.
+2. **Master**: Senior experts (e.g., retirees) who execute the service and share their knowledge on the job.
+3. **Apprentice**: Junior members who learn from the Master while getting paid to assist on the job.
+4. **Admin**: Platform moderators ensuring safety, managing categories, and overseeing payments/escrow.
