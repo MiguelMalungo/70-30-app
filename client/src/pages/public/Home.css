@@ -291,12 +291,13 @@
 }
 
 .mobile-join-btn.mentor {
-  background: #D3EED3;
-  color: var(--green-900);
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.25);
 }
 
 .mobile-join-btn.mentor:hover {
-  background: #bde3bd;
+  background: rgba(255, 255, 255, 0.22);
 }
 
 .mobile-join-btn.apprentice {
