@@ -200,6 +200,14 @@ const Login = () => {
                     <T pt="Criar conta" en="Create account" sv="Skapa konto" />
                 </Link>
             </div>
+
+            {/* Demo preview button */}
+            <button
+                className="auth-demo-btn"
+                onClick={() => { flushSync(() => devLogin('CLIENT')); navigate('/client'); }}
+            >
+                🔍 <T pt="Ver demo sem conta" en="Preview demo" sv="Förhandsgranska demo" />
+            </button>
         </div>
     );
 };
