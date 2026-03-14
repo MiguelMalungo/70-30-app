@@ -69,7 +69,7 @@ const Login = () => {
             {/* Video background */}
             <div className="auth-video-bg">
                 <video autoPlay muted loop playsInline>
-                    <source src="/bg.mp4" type="video/mp4" />
+                    <source src={`${import.meta.env.BASE_URL}bg.mp4`} type="video/mp4" />
                 </video>
                 <div className="auth-video-overlay" />
             </div>
