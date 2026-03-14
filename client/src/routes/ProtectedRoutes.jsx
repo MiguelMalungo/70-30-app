@@ -2,8 +2,17 @@ import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
+// Backend uses MENTOR/MENTEE; frontend routes previously used MASTER/APPRENTICE.
+// This helper normalizes so both conventions work.
+const normalizeRole = (role) => {
+    const r = (role || '').toUpperCase();
+    if (r === 'MASTER') return 'MENTOR';
+    if (r === 'APPRENTICE') return 'MENTEE';
+    return r;
+};
+
 export const ProtectedRoute = ({ allowedRoles = [] }) => {
-    const { user, loading } = useAuth();
+    const { user, loading, getRoleRedirect } = useAuth();
 
     if (loading) {
         return <div className="placeholder-view">Loading...</div>;
@@ -13,13 +22,13 @@ export const ProtectedRoute = ({ allowedRoles = [] }) => {
         return <Navigate to="/login" replace />;
     }
 
-    // If roles are specified and user role isn't included, kick them to their dashboard
-    if (allowedRoles.length > 0 && !allowedRoles.includes(user.role)) {
-        if (user.role === 'ADMIN') return <Navigate to="/admin" replace />;
-        if (user.role === 'CLIENT') return <Navigate to="/client" replace />;
-        return <Navigate to="/pro" replace />; // Masters/Apprentices
+    const userRole = normalizeRole(user.role);
+    const allowed = allowedRoles.map(normalizeRole);
+
+    // If roles are specified and user role isn't included, redirect to their dashboard
+    if (allowed.length > 0 && !allowed.includes(userRole)) {
+        return <Navigate to={getRoleRedirect(userRole)} replace />;
     }
 
-    // Authorized
     return <Outlet />;
 };

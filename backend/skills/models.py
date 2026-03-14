@@ -7,10 +7,12 @@ User = get_user_model()
 
 class Category(TimeStampedModel):
     """
-    High-level grouping for skills (e.g. 'Craftsmanship', 'Technology').
+    High-level grouping for services (e.g. 'Plumbing', 'Electrical').
     """
     name = models.CharField(_("Name"), max_length=100, unique=True)
+    slug = models.SlugField(_("Slug"), max_length=100, unique=True, blank=True, help_text=_("URL-friendly identifier"))
     icon = models.CharField(_("Icon"), max_length=50, blank=True, help_text=_("Icon name or URL"))
+    description = models.TextField(_("Description"), blank=True, help_text=_("Category description"))
 
     class Meta:
         verbose_name = _("Category")

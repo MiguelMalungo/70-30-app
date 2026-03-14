@@ -34,6 +34,8 @@ class Booking(TimeStampedModel):
     )
     
     note = models.TextField(_("Note"), blank=True, help_text=_("Initial message or request details"))
+    address = models.CharField(_("Address"), max_length=255, blank=True, help_text=_("Service location address"))
+    price = models.DecimalField(_("Price"), max_digits=8, decimal_places=2, null=True, blank=True, help_text=_("Agreed service price in EUR"))
 
     class Meta:
         verbose_name = _("Booking")

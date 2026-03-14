@@ -6,7 +6,7 @@ from .models import Category, Skill, UserSkill
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ['id', 'name', 'icon', 'created_at', 'updated_at']
+        fields = ['id', 'name', 'slug', 'icon', 'description', 'created_at', 'updated_at']
 
 class SkillSerializer(serializers.ModelSerializer):
     category_id = serializers.PrimaryKeyRelatedField(

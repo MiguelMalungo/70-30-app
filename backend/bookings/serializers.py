@@ -9,13 +9,16 @@ class BookingSerializer(serializers.ModelSerializer):
     mentor_name = serializers.CharField(source='mentor.username', read_only=True)
     mentee_name = serializers.CharField(source='mentee.username', read_only=True)
     skill_name = serializers.CharField(source='skill.name', read_only=True)
-    
+    category_name = serializers.CharField(source='skill.category.name', read_only=True, default='')
+    category_slug = serializers.CharField(source='skill.category.slug', read_only=True, default='')
+
     class Meta:
         model = Booking
         fields = [
             'id', 'mentor', 'mentor_name', 'mentee', 'mentee_name',
-            'skill', 'skill_name', 'start_time', 'end_time', 
-            'status', 'note', 'created_at'
+            'skill', 'skill_name', 'category_name', 'category_slug',
+            'start_time', 'end_time',
+            'status', 'note', 'address', 'price', 'created_at'
         ]
         read_only_fields = ['mentee', 'status', 'created_at']
 

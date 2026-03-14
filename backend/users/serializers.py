@@ -2,7 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model
 try:
     from django.contrib.gis.geos import Point
-except (ImportError, OSError):
+except Exception:
     # Fallback for environments without GIS libs
     class Point:
         def __init__(self, x, y, srid=None):

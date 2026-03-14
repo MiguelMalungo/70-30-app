@@ -14,7 +14,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-otu7zt$^@#l8vaz&#!o=z
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', '0') == '1'
 
-ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', 'localhost').split(',')
+ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
 
 # Application definition
@@ -100,16 +100,24 @@ DATABASES = {
 }
 
 
-# Redis Cache
-CACHES = {
-    'default': {
-        'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': os.environ.get('REDIS_URL', 'redis://127.0.0.1:6379/1'),
-        'OPTIONS': {
-            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+# Cache — use Redis in production, fallback to local memory for dev
+REDIS_URL = os.environ.get('REDIS_URL')
+if REDIS_URL:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django_redis.cache.RedisCache',
+            'LOCATION': REDIS_URL,
+            'OPTIONS': {
+                'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            }
         }
     }
-}
+else:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

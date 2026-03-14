@@ -1,186 +1,198 @@
-import React from 'react';
-import { Outlet, Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
+import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { LogOut, Home, User } from 'lucide-react';
+import { useLang, T } from '../../context/LanguageContext';
+import { LogOut, Menu, X, ShoppingCart } from 'lucide-react';
+import logoImg from '../../assets/images/logo7030.png';
+import './MainLayout.css';
 
 const MainLayout = () => {
     const { user, logout } = useAuth();
+    const { lang, setLang } = useLang();
     const navigate = useNavigate();
+    const location = useLocation();
+    const [scrolled, setScrolled] = useState(false);
+    const [mobileOpen, setMobileOpen] = useState(false);
+    const [cartCount] = useState(0);
 
-    const handleLogout = () => {
-        logout();
+    const pagesWithHero = ['/', '/login', '/register'];
+    const isHome = pagesWithHero.includes(location.pathname);
+    const isAuthPage = ['/login', '/register'].includes(location.pathname);
+
+    // Reset synchronously BEFORE paint so the nav never flickers into scrolled state
+    useLayoutEffect(() => {
+        window.scrollTo(0, 0);
+        setScrolled(false);
+        setMobileOpen(false);
+    }, [location.pathname]);
+
+    // Keep scroll listener alive for the current page
+    useEffect(() => {
+        const handleScroll = () => setScrolled(window.scrollY > 40);
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
+    const closeMobile = () => setMobileOpen(false);
+
+    const handleLogout = async () => {
+        await logout();
         navigate('/login');
     };
 
+    const navClass = `nav ${scrolled ? 'scrolled' : ''}`;
+
     return (
         <div className="page-container">
-            {/* Mock Navbar */}
-            <header style={navStyle}>
-                <div style={logoStyle}>
-                    <Link to="/" style={{ color: 'white' }}>70-30 Engine</Link>
-                </div>
+            {/* Navigation */}
+            <nav className={navClass}>
+                <div className="nav-inner">
+                    <Link to="/" className="nav-logo">
+                        <img src={logoImg} alt="70.30" />
+                    </Link>
 
-                <nav style={navLinksStyle}>
-                    {!user ? (
-                        <>
-                            <Link to="/login" style={linkStyle}>Login</Link>
-                            <Link to="/register" style={linkStyle}>Register</Link>
-                        </>
-                    ) : (
-                        <>
-                            <span style={{ color: 'var(--color-text-muted)' }}>
-                                {user.role} Dashboard:
-                            </span>
-
-                            {user.role === 'CLIENT' && (
-                                <>
-                                    <Link to="/client" style={linkStyle}>Dashboard</Link>
-                                    <Link to="/client/wizard" style={linkStyle}>Book Service</Link>
-                                </>
-                            )}
-
-                            {(user.role === 'MASTER' || user.role === 'APPRENTICE') && (
-                                <>
-                                    <Link to="/pro" style={linkStyle}>Jobs</Link>
-                                    <Link to="/pro/community" style={linkStyle}>Community</Link>
-                                </>
-                            )}
-
-                            {user.role === 'ADMIN' && (
-                                <Link to="/admin" style={linkStyle}>Admin Panel</Link>
-                            )}
-
-                            <button onClick={handleLogout} style={logoutBtnStyle} title="Logout">
+                    {/* Desktop: role badge + logout right after logo */}
+                    {user && (
+                        <div className="nav-user-info">
+                            <span className="nav-role-badge">{user.role}</span>
+                            <button onClick={handleLogout} className="nav-logout-btn" title="Logout">
                                 <LogOut size={18} />
                             </button>
-                        </>
+                        </div>
                     )}
-                </nav>
-            </header>
 
-            {/* Main Content Area */}
-            <main style={{ flex: 1, backgroundColor: 'var(--color-base)' }}>
+                    <ul className={`nav-links ${mobileOpen ? 'mobile-open' : ''}`}>
+                        {!user ? (
+                            <>
+                                {!isAuthPage && (
+                                    <>
+                                        <li><a href="#how" onClick={closeMobile}><T pt="Como funciona" en="How it works" sv="Hur det fungerar" /></a></li>
+                                        <li><a href="#services" onClick={closeMobile}><T pt="Serviços" en="Services" sv="Tjänster" /></a></li>
+                                        <li><a href="#reviews" onClick={closeMobile}><T pt="Avaliações" en="Reviews" sv="Omdömen" /></a></li>
+                                        <li><a href="#cities" onClick={closeMobile}><T pt="Cidades" en="Cities" sv="Städer" /></a></li>
+                                        <li><a href="#faq" onClick={closeMobile}>FAQ</a></li>
+                                    </>
+                                )}
+
+                                <li className="nav-actions-wrapper">
+                                    <div className="nav-top-row">
+                                        <div className="nav-lang">
+                                            <button onClick={() => setLang('pt')} className={lang === 'pt' ? 'active' : ''}>PT</button>
+                                            <button onClick={() => setLang('en')} className={lang === 'en' ? 'active' : ''}>EN</button>
+                                            <button onClick={() => setLang('sv')} className={lang === 'sv' ? 'active' : ''}>SV</button>
+                                        </div>
+                                        {!isAuthPage && (
+                                            <button className="nav-cart-btn" title="Cart">
+                                                <ShoppingCart size={18} />
+                                                <span className={`cart-badge ${cartCount === 0 ? 'empty' : ''}`}>{cartCount}</span>
+                                            </button>
+                                        )}
+                                    </div>
+                                </li>
+                            </>
+                        ) : (
+                            <>
+                                {/* Mobile-only: role badge + logout grouped + right-aligned */}
+                                <li className="nav-user-info-mobile">
+                                    <span className="nav-role-badge">{user.role}</span>
+                                    <button onClick={handleLogout} className="nav-logout-btn" title="Logout">
+                                        <LogOut size={18} />
+                                    </button>
+                                </li>
+
+                                {['CLIENT', 'MENTEE', 'APPRENTICE'].includes(user.role) && (
+                                    <>
+                                        <li><Link to="/client" onClick={closeMobile}><T pt="Início" en="Home" sv="Hem" /></Link></li>
+                                        <li><Link to="/client/services" onClick={closeMobile}><T pt="Serviços" en="Services" sv="Tjänster" /></Link></li>
+                                        <li><Link to="/client/bookings" onClick={closeMobile}><T pt="As minhas reservas" en="My Bookings" sv="Mina bokningar" /></Link></li>
+                                        <li><Link to="/client/profile" onClick={closeMobile}><T pt="O meu perfil" en="My Profile" sv="Min profil" /></Link></li>
+                                    </>
+                                )}
+
+                                {(['MASTER', 'MENTOR'].includes(user.role)) && (
+                                    <>
+                                        <li><Link to="/pro" onClick={closeMobile}>Jobs</Link></li>
+                                        <li><Link to="/pro/community" onClick={closeMobile}>Community</Link></li>
+                                    </>
+                                )}
+
+                                {user.role === 'ADMIN' && (
+                                    <li><Link to="/admin" onClick={closeMobile}>Admin Panel</Link></li>
+                                )}
+
+                                <li className="nav-actions-wrapper">
+                                    <div className="nav-top-row">
+                                        <div className="nav-lang">
+                                            <button onClick={() => setLang('pt')} className={lang === 'pt' ? 'active' : ''}>PT</button>
+                                            <button onClick={() => setLang('en')} className={lang === 'en' ? 'active' : ''}>EN</button>
+                                            <button onClick={() => setLang('sv')} className={lang === 'sv' ? 'active' : ''}>SV</button>
+                                        </div>
+                                    </div>
+                                </li>
+                            </>
+                        )}
+                    </ul>
+
+                    <button
+                        className="nav-mobile-toggle"
+                        onClick={() => setMobileOpen(!mobileOpen)}
+                        aria-label="Menu"
+                    >
+                        {mobileOpen ? <X size={24} /> : <Menu size={24} />}
+                    </button>
+                </div>
+            </nav>
+
+            {/* Main Content */}
+            <main style={{ flex: 1 }}>
                 <Outlet />
             </main>
 
-            {/* Comprehensive Footer */}
-            <footer style={footerStyle}>
-                <div style={footerGridStyle}>
-                    <div style={footerColStyle}>
-                        <h4 style={footerColTitleStyle}>70-30 Engine</h4>
-                        <p style={footerColTextStyle}>Bridging generations through skilled service and meaningful mentorship.</p>
+            {/* Footer */}
+            <footer className="footer">
+                <div className="footer-inner">
+                    <div className="footer-grid">
+                        <div className="footer-brand">
+                            <Link to="/" className="footer-logo">
+                                <img src={logoImg} alt="70.30" />
+                            </Link>
+                            <p><T pt="O serviço que precisas, sempre perto de ti. A plataforma que une gerações." en="The service you need, always near you. Bridging generations through skilled service and mentorship." sv="Tjänsten du behöver, alltid nära dig. Broar mellan generationer." /></p>
+                        </div>
+                        <div className="footer-col">
+                            <h4><T pt="Plataforma" en="Platform" sv="Plattform" /></h4>
+                            <ul className="footer-links">
+                                <li><a href="#how"><T pt="Como funciona" en="How it Works" sv="Hur det fungerar" /></a></li>
+                                <li><a href="#services"><T pt="Serviços" en="Services" sv="Tjänster" /></a></li>
+                                <li><a href="#reviews"><T pt="Avaliações" en="Reviews" sv="Omdömen" /></a></li>
+                                <li><a href="#cities"><T pt="Cidades" en="Cities" sv="Städer" /></a></li>
+                                <li><a href="#faq">FAQ</a></li>
+                            </ul>
+                        </div>
+                        <div className="footer-col">
+                            <h4><T pt="Acesso" en="Access" sv="Åtkomst" /></h4>
+                            <ul className="footer-links">
+                                <li><Link to="/login"><T pt="Entrar" en="Sign In" sv="Logga in" /></Link></li>
+                                <li><Link to="/login"><T pt="Entrar como Mentor" en="Join as Mentor" sv="Gå med som Mentor" /></Link></li>
+                                <li><Link to="/login"><T pt="Entrar como Aprendiz" en="Join as Apprentice" sv="Gå med som Lärling" /></Link></li>
+                            </ul>
+                        </div>
+                        <div className="footer-col">
+                            <h4><T pt="Legal" en="Legal" sv="Juridiskt" /></h4>
+                            <ul className="footer-links">
+                                <li><Link to="#"><T pt="Termos de Serviço" en="Terms of Service" sv="Användarvillkor" /></Link></li>
+                                <li><Link to="#"><T pt="Política de Privacidade" en="Privacy Policy" sv="Integritetspolicy" /></Link></li>
+                                <li><Link to="#"><T pt="Centro de Ajuda" en="Help Center" sv="Hjälpcenter" /></Link></li>
+                                <li><Link to="#"><T pt="Contacto" en="Contact Us" sv="Kontakta oss" /></Link></li>
+                            </ul>
+                        </div>
                     </div>
-                    <div style={footerColStyle}>
-                        <h4 style={footerColTitleStyle}>Company</h4>
-                        <Link to="#" style={footerLinkStyle}>About Us</Link>
-                        <Link to="#" style={footerLinkStyle}>How it Works</Link>
-                        <Link to="#" style={footerLinkStyle}>Trust & Safety</Link>
+                    <div className="footer-bottom">
+                        <p>&copy; 2026 70.30 — <T pt="Serviços Domésticos de Confiança." en="Trusted Home Services." sv="Pålitliga Hemtjänster." /> <T pt="Todos os direitos reservados." en="All rights reserved." sv="Alla rättigheter förbehållna." /></p>
                     </div>
-                    <div style={footerColStyle}>
-                        <h4 style={footerColTitleStyle}>Support</h4>
-                        <Link to="#" style={footerLinkStyle}>Help Center</Link>
-                        <Link to="#" style={footerLinkStyle}>Q&A / FAQs</Link>
-                        <Link to="#" style={footerLinkStyle}>Contact Us</Link>
-                    </div>
-                    <div style={footerColStyle}>
-                        <h4 style={footerColTitleStyle}>Legal</h4>
-                        <Link to="#" style={footerLinkStyle}>Terms of Service</Link>
-                        <Link to="#" style={footerLinkStyle}>Privacy Policy</Link>
-                    </div>
-                </div>
-                <div style={footerBottomStyle}>
-                    <p>&copy; 2026 70-30 Social Platform POC. All rights reserved.</p>
                 </div>
             </footer>
         </div>
     );
-};
-
-// Inline styles for the placeholder layout only (will be moved to CSS later or Tailwind)
-const navStyle = {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '1rem 2rem',
-    backgroundColor: 'var(--color-primary)',
-    color: 'var(--color-surface)'
-};
-
-const logoStyle = {
-    fontWeight: 'bold',
-    fontSize: '1.2rem',
-    letterSpacing: '1px'
-};
-
-const navLinksStyle = {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '1.5rem'
-};
-
-const linkStyle = {
-    color: 'var(--color-surface)',
-    fontWeight: '500',
-    opacity: 0.9
-};
-
-const logoutBtnStyle = {
-    backgroundColor: 'transparent',
-    color: 'var(--color-danger)',
-    display: 'flex',
-    alignItems: 'center',
-    padding: '0.25rem 0.5rem',
-    borderRadius: '4px'
-};
-
-const footerStyle = {
-    backgroundColor: 'var(--color-primary)',
-    color: 'white',
-    padding: '4rem 2rem 2rem 2rem',
-    marginTop: 'auto'
-};
-
-const footerGridStyle = {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-    gap: '3rem',
-    maxWidth: '1200px',
-    margin: '0 auto',
-    marginBottom: '3rem'
-};
-
-const footerColStyle = {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '0.75rem'
-};
-
-const footerColTitleStyle = {
-    fontFamily: 'var(--font-family-display)',
-    fontSize: '1.25rem',
-    marginBottom: '0.5rem',
-    color: 'white'
-};
-
-const footerColTextStyle = {
-    color: 'rgba(255, 255, 255, 0.7)',
-    lineHeight: '1.6',
-    fontSize: '0.95rem'
-};
-
-const footerLinkStyle = {
-    color: 'rgba(255, 255, 255, 0.7)',
-    fontSize: '0.95rem',
-    textDecoration: 'none',
-    transition: 'color var(--transition-speed)'
-};
-
-const footerBottomStyle = {
-    borderTop: '1px solid rgba(255, 255, 255, 0.1)',
-    textAlign: 'center',
-    paddingTop: '2rem',
-    color: 'rgba(255, 255, 255, 0.5)',
-    fontSize: '0.85rem'
 };
 
 export default MainLayout;

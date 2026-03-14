@@ -1,6 +1,6 @@
 try:
     from django.contrib.gis.db import models as gis_models
-except (ImportError, OSError):
+except (ImportError, OSError, Exception):
     from django.db import models
     gis_models = models
     

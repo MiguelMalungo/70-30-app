@@ -2,10 +2,20 @@
 
 from django.conf import settings
 import django.contrib.auth.validators
-import django.contrib.gis.db.models.fields
 from django.db import migrations, models
 import django.db.models.deletion
 import django.utils.timezone
+
+# GIS fallback — use TextField when GDAL / GIS libs are unavailable
+try:
+    from django.contrib.gis.db.models.fields import PointField as _PointField
+except (ImportError, OSError, Exception):
+    class _PointField(models.TextField):
+        description = "Mock PointField (GDAL not available)"
+        def __init__(self, *args, **kwargs):
+            kwargs.pop('srid', None)
+            kwargs.pop('geography', None)
+            super().__init__(*args, **kwargs)
 
 
 class Migration(migrations.Migration):
@@ -48,7 +58,7 @@ class Migration(migrations.Migration):
                 ('bio', models.TextField(blank=True, verbose_name='Bio')),
                 ('avatar', models.ImageField(blank=True, null=True, upload_to='avatars/', verbose_name='Avatar')),
                 ('years_of_experience', models.PositiveIntegerField(blank=True, help_text='Only for Mentors', null=True, verbose_name='Years of Experience')),
-                ('location', django.contrib.gis.db.models.fields.PointField(blank=True, null=True, srid=4326, verbose_name='Location')),
+                ('location', _PointField(blank=True, null=True, srid=4326, verbose_name='Location')),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
                 ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='profile', to=settings.AUTH_USER_MODEL)),

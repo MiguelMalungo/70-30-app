@@ -75,7 +75,8 @@ class MentorSearchView(generics.ListAPIView):
     
     @swagger_auto_schema(
         manual_parameters=[
-            openapi.Parameter('skill_id', openapi.IN_QUERY, description="ID of the skill to search for", type=openapi.TYPE_INTEGER, required=True),
+            openapi.Parameter('skill_id', openapi.IN_QUERY, description="ID of the skill to search for", type=openapi.TYPE_INTEGER),
+            openapi.Parameter('category_slug', openapi.IN_QUERY, description="Slug of the category to search professionals for", type=openapi.TYPE_STRING),
             openapi.Parameter('distance_km', openapi.IN_QUERY, description="Search radius in kilometers", type=openapi.TYPE_NUMBER),
             openapi.Parameter('latitude', openapi.IN_QUERY, description="User's latitude (optional, defaults to profile location)", type=openapi.TYPE_NUMBER),
             openapi.Parameter('longitude', openapi.IN_QUERY, description="User's longitude (optional, defaults to profile location)", type=openapi.TYPE_NUMBER),
@@ -83,22 +84,20 @@ class MentorSearchView(generics.ListAPIView):
     )
     def list(self, request, *args, **kwargs):
         skill_id = request.query_params.get('skill_id')
+        category_slug = request.query_params.get('category_slug')
         distance = request.query_params.get('distance_km')
         lat = request.query_params.get('latitude')
         lon = request.query_params.get('longitude')
-        
+
         # Resolve location for cache key consistency
-        # If lat/lon provided, use them. 
-        # If not, use user's profile location (if available) implies strictly personal search -> specific to user
         user_id = request.user.id if request.user.is_authenticated else 'anon'
-        
+
         # Construct a robust cache key
-        # Key format: mentor_search:skill_id:distance:lat:lon:user_id(if fallback used)
+        search_key = skill_id or category_slug or 'none'
         if lat and lon:
-            cache_key = f"mentor_search:{skill_id}:{distance}:{lat}:{lon}"
+            cache_key = f"mentor_search:{search_key}:{distance}:{lat}:{lon}"
         else:
-            # Fallback to user profile means this search is unique to this user's current location in DB
-            cache_key = f"mentor_search:{skill_id}:{distance}:user:{user_id}"
+            cache_key = f"mentor_search:{search_key}:{distance}:user:{user_id}"
 
         cached_data = cache.get(cache_key)
         if cached_data:
@@ -122,18 +121,24 @@ class MentorSearchView(generics.ListAPIView):
             from django.contrib.gis.db.models.functions import Distance
             from django.contrib.gis.measure import D
             has_gis = True
-        except (ImportError, OSError):
+        except Exception:
             has_gis = False
 
         skill_id = self.request.query_params.get('skill_id')
+        category_slug = self.request.query_params.get('category_slug')
         distance_km = self.request.query_params.get('distance_km')
         lat = self.request.query_params.get('latitude')
         lon = self.request.query_params.get('longitude')
-        
-        if not skill_id:
+
+        if not skill_id and not category_slug:
             return UserSkill.objects.none()
-            
-        queryset = UserSkill.objects.filter(skill_id=skill_id).select_related('user', 'user__profile')
+
+        queryset = UserSkill.objects.select_related('user', 'user__profile', 'skill', 'skill__category')
+
+        if skill_id:
+            queryset = queryset.filter(skill_id=skill_id)
+        elif category_slug:
+            queryset = queryset.filter(skill__category__slug=category_slug)
         
         if not has_gis:
             return queryset.order_by('-years_of_experience')
