@@ -2,7 +2,7 @@ import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useLang, T } from '../../context/LanguageContext';
-import { LogOut, Menu, X, ShoppingCart } from 'lucide-react';
+import { LogOut, Menu, X, ShoppingCart, ArrowLeft } from 'lucide-react';
 import logoImg from '../../assets/images/logo7030.png';
 import './MainLayout.css';
 
@@ -76,6 +76,12 @@ const MainLayout = () => {
 
                                 <li className="nav-actions-wrapper">
                                     <div className="nav-top-row">
+                                        {isAuthPage && (
+                                            <button onClick={() => navigate('/')} className="nav-back-btn">
+                                                <ArrowLeft size={15} />
+                                                <T pt="Voltar" en="Back" sv="Tillbaka" />
+                                            </button>
+                                        )}
                                         <div className="nav-lang">
                                             <button onClick={() => setLang('pt')} className={lang === 'pt' ? 'active' : ''}>PT</button>
                                             <button onClick={() => setLang('en')} className={lang === 'en' ? 'active' : ''}>EN</button>
@@ -133,13 +139,15 @@ const MainLayout = () => {
                         )}
                     </ul>
 
-                    <button
-                        className="nav-mobile-toggle"
-                        onClick={() => setMobileOpen(!mobileOpen)}
-                        aria-label="Menu"
-                    >
-                        {mobileOpen ? <X size={24} /> : <Menu size={24} />}
-                    </button>
+                    {!isAuthPage && (
+                        <button
+                            className="nav-mobile-toggle"
+                            onClick={() => setMobileOpen(!mobileOpen)}
+                            aria-label="Menu"
+                        >
+                            {mobileOpen ? <X size={24} /> : <Menu size={24} />}
+                        </button>
+                    )}
                 </div>
             </nav>
 

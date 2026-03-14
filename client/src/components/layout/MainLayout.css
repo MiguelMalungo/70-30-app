@@ -135,6 +135,27 @@
   gap: 10px;
 }
 
+/* ─── Auth pages back button ─── */
+.nav-back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.84rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.8);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    font-family: var(--font-body);
+    transition: color 0.2s;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+.nav-back-btn:hover { color: #fff; }
+.nav.scrolled .nav-back-btn { color: var(--slate-600); }
+.nav.scrolled .nav-back-btn:hover { color: var(--slate-900); }
+
 /* ─── Language Switcher ─── */
 .nav-lang {
   display: flex;

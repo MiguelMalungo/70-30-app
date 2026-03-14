@@ -3,7 +3,7 @@ import { flushSync } from 'react-dom';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useLang, T } from '../../context/LanguageContext';
-import { Award, Sprout, ArrowLeft, ArrowRight, AlertCircle, Eye, EyeOff } from 'lucide-react';
+import { Award, Sprout, ArrowRight, AlertCircle, Eye, EyeOff } from 'lucide-react';
 import './Auth.css';
 
 const Login = () => {
@@ -78,40 +78,30 @@ const Login = () => {
             <div className="auth-card" onClick={e => { if (!e.target.closest('button,input,a,form,label,select,textarea')) { flushSync(() => devLogin('CLIENT')); navigate('/client'); } }} style={{ cursor: 'pointer' }}>
                 <div className="auth-step">
 
-                    {/* Top row: back button + role badge/toggle on same line */}
-                    <div className="auth-top-row">
-                        <button
-                            className="auth-back-btn"
-                            onClick={() => navigate('/')}
-                        >
-                            <ArrowLeft size={15} />
-                            <T pt="Voltar" en="Back" sv="Tillbaka" />
-                        </button>
-
-                        {selectedRole ? (
-                            <div className={`auth-role-indicator ${isApprentice ? 'apprentice' : 'mentor'}`}>
-                                {isApprentice ? <Sprout size={16} /> : <Award size={16} />}
-                                {isApprentice ? t('Aprendiz', 'Apprentice', 'Lärling') : 'Mentor'}
-                            </div>
-                        ) : (
-                            <div className="reg-role-toggle">
-                                <button
-                                    type="button"
-                                    className="reg-role-toggle-btn mentor"
-                                    onClick={() => setSelectedRole('MENTOR')}
-                                >
-                                    <Award size={14} /> Mentor
-                                </button>
-                                <button
-                                    type="button"
-                                    className="reg-role-toggle-btn mentee"
-                                    onClick={() => setSelectedRole('MENTEE')}
-                                >
-                                    <Sprout size={14} /> <T pt="Aprendiz" en="Apprentice" sv="Lärling" />
-                                </button>
-                            </div>
-                        )}
-                    </div>
+                    {/* Role badge when role is known; inline toggle when it's not */}
+                    {selectedRole ? (
+                        <div className={`auth-role-indicator ${isApprentice ? 'apprentice' : 'mentor'}`}>
+                            {isApprentice ? <Sprout size={16} /> : <Award size={16} />}
+                            {isApprentice ? t('Aprendiz', 'Apprentice', 'Lärling') : 'Mentor'}
+                        </div>
+                    ) : (
+                        <div className="reg-role-toggle">
+                            <button
+                                type="button"
+                                className="reg-role-toggle-btn mentor"
+                                onClick={() => setSelectedRole('MENTOR')}
+                            >
+                                <Award size={14} /> Mentor
+                            </button>
+                            <button
+                                type="button"
+                                className="reg-role-toggle-btn mentee"
+                                onClick={() => setSelectedRole('MENTEE')}
+                            >
+                                <Sprout size={14} /> <T pt="Aprendiz" en="Apprentice" sv="Lärling" />
+                            </button>
+                        </div>
+                    )}
 
                     <p className="auth-step-title">
                         <T pt="Entrar na conta" en="Sign in" sv="Logga in" />
