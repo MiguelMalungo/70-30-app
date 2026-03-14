@@ -6,6 +6,7 @@ import { tmpdir } from 'os'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
+  base: '/70-30-app/',
   cacheDir: resolve(tmpdir(), '.vite-70-30'),
   server: {
     host: true,
