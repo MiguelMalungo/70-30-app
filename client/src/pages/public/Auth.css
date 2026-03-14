@@ -343,7 +343,21 @@
     background: linear-gradient(90deg, var(--gold), #e8c97a);
 }
 
-/* ── STEP 2 — Back button & role badge ── */
+/* ── STEP 2 — Back button + role badge on same row ── */
+.auth-top-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+.auth-top-row .auth-role-indicator {
+    margin: 0;
+}
+.auth-top-row .reg-role-toggle {
+    margin: 0;
+}
+
 .auth-back-btn {
     display: inline-flex;
     align-items: center;
@@ -355,9 +369,9 @@
     border: none;
     cursor: pointer;
     padding: 0;
-    margin-bottom: 12px;
     font-family: var(--font-body);
     transition: color 0.2s;
+    flex-shrink: 0;
 }
 .auth-back-btn:hover {
     color: var(--slate-900);
