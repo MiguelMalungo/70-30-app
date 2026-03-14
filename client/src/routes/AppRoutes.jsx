@@ -7,6 +7,7 @@ import { ProtectedRoute } from './ProtectedRoutes';
 import Home from '../pages/public/Home';
 import Login from '../pages/public/Login';
 import Register from '../pages/public/Register';
+import Demo from '../pages/public/Demo';
 
 // Client Pages
 import ClientDashboard from '../pages/client/Dashboard';
@@ -32,6 +33,7 @@ const AppRoutes = () => {
                 <Route path="/" element={<Home />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
+                <Route path="/demo" element={<Demo />} />
 
                 {/* Client Protected Routes */}
                 <Route element={<ProtectedRoute allowedRoles={['CLIENT', 'MENTEE', 'APPRENTICE']} />}>

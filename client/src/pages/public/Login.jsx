@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { flushSync } from 'react-dom';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useLang, T } from '../../context/LanguageContext';
@@ -7,7 +6,7 @@ import { Award, Sprout, ArrowRight, AlertCircle, Eye, EyeOff } from 'lucide-reac
 import './Auth.css';
 
 const Login = () => {
-    const { login, getRoleRedirect, devLogin } = useAuth();
+    const { login, getRoleRedirect } = useAuth();
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const { lang } = useLang();
@@ -75,7 +74,7 @@ const Login = () => {
             </div>
 
             {/* Card */}
-            <div className="auth-card" onClick={e => { if (!e.target.closest('button,input,a,form,label,select,textarea')) { flushSync(() => devLogin('CLIENT')); navigate('/client'); } }} style={{ cursor: 'pointer' }}>
+            <div className="auth-card">
                 <div className="auth-step">
 
                     {/* Role badge when role is known; inline toggle when it's not */}
@@ -196,7 +195,7 @@ const Login = () => {
             {/* Demo preview button */}
             <button
                 className="auth-demo-btn"
-                onClick={() => { flushSync(() => devLogin('CLIENT')); navigate('/client'); }}
+                onClick={() => navigate('/demo')}
             >
                 🔍 <T pt="Ver demo sem conta" en="Preview demo" sv="Förhandsgranska demo" />
             </button>
