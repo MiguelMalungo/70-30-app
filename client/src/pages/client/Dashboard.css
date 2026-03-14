@@ -377,7 +377,7 @@
 }
 
 @media (max-width: 768px) {
-  .dash-hero { padding: 60px 0 40px; }
+  .dash-hero { padding: 96px 0 40px; }
   .dash-categories-grid { grid-template-columns: repeat(2, 1fr); }
   .dash-quick-actions { grid-template-columns: 1fr; }
   .dash-hero-stats { flex-wrap: wrap; gap: 12px; }
