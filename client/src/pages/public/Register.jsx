@@ -5,7 +5,6 @@ import { useLang, T } from '../../context/LanguageContext';
 import {
     Award,
     Sprout,
-    ArrowLeft,
     ArrowRight,
     AlertCircle,
     CheckCircle,
@@ -122,14 +121,6 @@ const Register = () => {
             </div>
 
             <div className="auth-card">
-
-                <button
-                    className="auth-back-btn"
-                    onClick={() => navigate('/')}
-                >
-                    <ArrowLeft size={15} />
-                    <T pt="Voltar" en="Back" sv="Tillbaka" />
-                </button>
 
                 {/* Role badge when role is known; inline toggle when it's not */}
                 {selectedRole ? (
