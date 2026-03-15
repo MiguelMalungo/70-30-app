@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { T, useLang } from '../../context/LanguageContext';
 import { useNotifications } from '../../context/NotificationContext';
 import { Star, CheckCircle, User, Wrench, Calendar } from 'lucide-react';
-import imgReviews from '../../assets/images/reviews_quality.png';
+import imgReviews from '../../assets/images/reviews_quality.webp';
 import './ReviewPage.css';
 
 const MOCK_COMPLETED = [

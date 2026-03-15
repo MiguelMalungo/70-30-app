@@ -8,8 +8,8 @@ import {
   AlertCircle, Hourglass, Banknote, TrendingUp, X,
 } from 'lucide-react';
 import { bookingsAPI } from '../../services/api';
-import imgMentor from '../../assets/images/cat-eletricidade.png';
-import imgApprentice from '../../assets/images/aprentice.png';
+import imgMentor from '../../assets/images/cat-eletricidade.webp';
+import imgApprentice from '../../assets/images/aprentice.webp';
 import './Dashboard.css';
 
 const STATUS_CONFIG = {

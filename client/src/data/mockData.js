@@ -3,21 +3,21 @@ import {
   Leaf, Settings2, Plug, Gauge, BookOpen, Car, MoreHorizontal,
 } from 'lucide-react';
 
-import catCanalizacao from '../assets/images/cat-canalizacao.png';
-import catEletricidade from '../assets/images/cat-eletricidade.png';
-import catCarpintaria from '../assets/images/cat-carpintaria.png';
-import catPintura from '../assets/images/cat-pintura.png';
-import catMontagem from '../assets/images/cat-montagem.png';
-import catJardim from '../assets/images/cat-jardim.png';
-import catReparacoes from '../assets/images/cat-reparacoes.png';
-import catInstalacao from '../assets/images/cat-instalacao.png';
-import catManutencao from '../assets/images/cat-manutencao.png';
-import studyImg from '../assets/images/study.png';
-import mechanicImg from '../assets/images/mechanic.png';
-import othersImg from '../assets/images/others.png';
+import catCanalizacao from '../assets/images/cat-canalizacao.webp';
+import catEletricidade from '../assets/images/cat-eletricidade.webp';
+import catCarpintaria from '../assets/images/cat-carpintaria.webp';
+import catPintura from '../assets/images/cat-pintura.webp';
+import catMontagem from '../assets/images/cat-montagem.webp';
+import catJardim from '../assets/images/cat-jardim.webp';
+import catReparacoes from '../assets/images/cat-reparacoes.webp';
+import catInstalacao from '../assets/images/cat-instalacao.webp';
+import catManutencao from '../assets/images/cat-manutencao.webp';
+import studyImg from '../assets/images/study.webp';
+import mechanicImg from '../assets/images/mechanic.webp';
+import othersImg from '../assets/images/others.webp';
 
-import carpinteiroImg from '../assets/images/carpinteiro.png';
-import apprenticeImg from '../assets/images/aprentice.png';
+import carpinteiroImg from '../assets/images/carpinteiro.webp';
+import apprenticeImg from '../assets/images/aprentice.webp';
 
 /* ─── Helper ──────────────────────────────────────────────── */
 // Usage in components: getLabel(item.name, lang)

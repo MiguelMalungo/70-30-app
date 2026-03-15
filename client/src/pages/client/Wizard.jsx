@@ -8,6 +8,9 @@ import {
 import { T, useLang } from '../../context/LanguageContext';
 import { bookingsAPI } from '../../services/api';
 import { CATEGORIES, SUBCATEGORIES, PROFESSIONALS, getLabel } from '../../data/mockData';
+import PageMeta from '../../components/ui/PageMeta';
+import useAnalytics, { AnalyticsEvents } from '../../hooks/useAnalytics';
+import { sanitizeText } from '../../utils/sanitize';
 import './Wizard.css';
 
 /* ── Time slots ── */
@@ -39,6 +42,7 @@ const Wizard = () => {
   const navigate = useNavigate();
   const { lang } = useLang();
 
+  const { track } = useAnalytics();
   const preCategory = searchParams.get('category') || '';
   const preService = searchParams.get('service') || '';
   const prePro = searchParams.get('pro') || '';
@@ -100,8 +104,8 @@ const Wizard = () => {
       const bookingData = {
         start_time: startDate.toISOString(),
         end_time: endDate.toISOString(),
-        note: description,
-        address: address,
+        note: sanitizeText(description, 2000),
+        address: sanitizeText(address, 300),
         price: sub ? sub.price : null,
       };
 
@@ -113,6 +117,7 @@ const Wizard = () => {
       }
 
       await bookingsAPI.create(bookingData);
+      track(AnalyticsEvents.BOOKING_CONFIRMED, { category: selectedCategory, service: selectedSub, hasPro: !!selectedPro });
       setSubmitted(true);
     } catch (err) {
       // If API fails (e.g. no mentor/skill in DB yet), still show success in dev mode
@@ -172,6 +177,7 @@ const Wizard = () => {
 
   return (
     <div className="wizard-page">
+      <PageMeta title={lang === 'pt' ? 'Reservar serviço' : lang === 'sv' ? 'Boka tjänst' : 'Book service'} />
       <div className="container">
         {/* ── Progress Bar ── */}
         <div className="wz-progress">
@@ -274,7 +280,7 @@ const Wizard = () => {
                       >
                         <div className="wz-pro-avatar">
                           {pro.avatar
-                            ? <img src={pro.avatar} alt={pro.name} />
+                            ? <img src={pro.avatar} alt={pro.name} loading="lazy" />
                             : <span>{pro.initials}</span>}
                         </div>
                         <div className="wz-pro-info">

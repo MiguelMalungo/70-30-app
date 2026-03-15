@@ -3,7 +3,9 @@ import { Link } from 'react-router-dom';
 import { Search, ArrowRight, MapPin, SlidersHorizontal, X } from 'lucide-react';
 import { T, useLang } from '../../context/LanguageContext';
 import { CATEGORIES, getLabel } from '../../data/mockData';
-import imgOthers from '../../assets/images/others.png';
+import PageMeta from '../../components/ui/PageMeta';
+import useAnalytics, { AnalyticsEvents } from '../../hooks/useAnalytics';
+import imgOthers from '../../assets/images/others.webp';
 import './ServicesPage.css';
 
 const CITIES = [
@@ -24,6 +26,7 @@ const SORT_OPTIONS = [
 
 const ServicesPage = () => {
   const { lang } = useLang();
+  const { track } = useAnalytics();
   const [query, setQuery] = useState('');
   const [city, setCity] = useState('all');
   const [sort, setSort] = useState('popular');
@@ -43,6 +46,10 @@ const ServicesPage = () => {
 
   return (
     <div className="services-page">
+      <PageMeta
+        title={lang === 'pt' ? 'Serviços' : lang === 'sv' ? 'Tjänster' : 'Services'}
+        description={lang === 'pt' ? 'Descobre todos os serviços domésticos disponíveis.' : 'Discover all available home services.'}
+      />
       {/* Hero Bar */}
       <section className="sp-hero" style={{ backgroundImage: `linear-gradient(135deg, rgba(25,55,48,0.85) 0%, rgba(13,40,24,0.75) 60%, rgba(25,55,48,0.85) 100%), url(${imgOthers})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
         <div className="container">
@@ -81,7 +88,7 @@ const ServicesPage = () => {
             <MapPin size={16} />
             <select
               value={city}
-              onChange={e => setCity(e.target.value)}
+              onChange={e => { setCity(e.target.value); track(AnalyticsEvents.FILTER_APPLIED, { type: 'city', value: e.target.value }); }}
               className="sp-filter-select"
             >
               {CITIES.map(c => (
@@ -94,7 +101,7 @@ const ServicesPage = () => {
             <SlidersHorizontal size={16} />
             <select
               value={sort}
-              onChange={e => setSort(e.target.value)}
+              onChange={e => { setSort(e.target.value); track(AnalyticsEvents.FILTER_APPLIED, { type: 'sort', value: e.target.value }); }}
               className="sp-filter-select"
             >
               {SORT_OPTIONS.map(s => (

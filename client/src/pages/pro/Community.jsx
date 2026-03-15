@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { T, useLang } from '../../context/LanguageContext';
 import { Search, Star, MapPin, Briefcase, Users, Filter, ChevronRight } from 'lucide-react';
 import { mentorSearchAPI } from '../../services/api';
-import imgCommunity from '../../assets/images/community.png';
+import imgCommunity from '../../assets/images/community.webp';
 import './Community.css';
 
 const MOCK_PROS = [

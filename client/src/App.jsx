@@ -1,5 +1,6 @@
 import React from 'react';
 import { HashRouter as Router } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 import { AuthProvider } from './context/AuthContext';
 import { LanguageProvider } from './context/LanguageContext';
 
@@ -10,16 +11,18 @@ import './index.css';
 
 function App() {
   return (
-    <LanguageProvider>
-      <AuthProvider>
-        <NotificationProvider>
-          <Router>
-            <AppRoutes />
-            <Toasts />
-          </Router>
-        </NotificationProvider>
-      </AuthProvider>
-    </LanguageProvider>
+    <HelmetProvider>
+      <LanguageProvider>
+        <AuthProvider>
+          <NotificationProvider>
+            <Router>
+              <AppRoutes />
+              <Toasts />
+            </Router>
+          </NotificationProvider>
+        </AuthProvider>
+      </LanguageProvider>
+    </HelmetProvider>
   );
 }
 

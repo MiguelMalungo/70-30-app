@@ -8,7 +8,8 @@ import {
 } from 'lucide-react';
 import { bookingsAPI } from '../../services/api';
 import { CATEGORIES, MOCK_BOOKINGS, getLabel } from '../../data/mockData';
-import stepReceiveImg from '../../assets/images/step-receive.png';
+import stepReceiveImg from '../../assets/images/step-receive.webp';
+import PageMeta from '../../components/ui/PageMeta';
 import './Dashboard.css';
 
 const STATUS_CONFIG = {
@@ -83,9 +84,10 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-page">
+      <PageMeta title={lang === 'pt' ? 'Painel' : lang === 'sv' ? 'Instrumentpanel' : 'Dashboard'} />
       {/* ── Welcome Banner ── */}
       <section className="dash-hero">
-        <img src={stepReceiveImg} alt="" className="dash-hero-img" aria-hidden="true" />
+        <img src={stepReceiveImg} alt="" className="dash-hero-img" aria-hidden="true" loading="lazy" />
         <div className="dash-hero-overlay" />
         <div className="container dash-hero-container">
           <div className="dash-hero-inner">
@@ -181,7 +183,7 @@ const Dashboard = () => {
                   <div key={booking.id} className="dash-booking-card">
                     <div className="dash-booking-avatar">
                       {booking.professionalAvatar
-                        ? <img src={booking.professionalAvatar} alt={booking.professionalName} />
+                        ? <img src={booking.professionalAvatar} alt={booking.professionalName} loading="lazy" />
                         : <span>{booking.professionalInitials}</span>
                       }
                     </div>

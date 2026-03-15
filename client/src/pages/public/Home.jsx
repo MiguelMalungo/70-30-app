@@ -8,33 +8,34 @@ import {
     Briefcase, BookOpen,
 } from 'lucide-react';
 import { useLang, T } from '../../context/LanguageContext';
+import PageMeta from '../../components/ui/PageMeta';
 import './Home.css';
 
 /* ── Images ────────────────────────────────────────────────── */
-import heroImg from '../../assets/images/hero-mentorship.png';
-import communityImg from '../../assets/images/community.png';
-import carpinteiroImg from '../../assets/images/carpinteiro.png';
+import heroImg from '../../assets/images/hero-mentorship.webp';
+import communityImg from '../../assets/images/community.webp';
+import carpinteiroImg from '../../assets/images/carpinteiro.webp';
 
-import stepChoose from '../../assets/images/step-choose.png';
-import stepSchedule from '../../assets/images/step-schedule.png';
-import stepReceive from '../../assets/images/step-receive.png';
+import stepChoose from '../../assets/images/step-choose.webp';
+import stepSchedule from '../../assets/images/step-schedule.webp';
+import stepReceive from '../../assets/images/step-receive.webp';
 
-import previewPlumbing from '../../assets/images/preview-plumbing.png';
-import previewAssembly from '../../assets/images/preview-assembly.png';
-import previewElectrical from '../../assets/images/preview-electrical.png';
+import previewPlumbing from '../../assets/images/preview-plumbing.webp';
+import previewAssembly from '../../assets/images/preview-assembly.webp';
+import previewElectrical from '../../assets/images/preview-electrical.webp';
 
-import catCanalizacao from '../../assets/images/cat-canalizacao.png';
-import catEletricidade from '../../assets/images/cat-eletricidade.png';
-import catCarpintaria from '../../assets/images/cat-carpintaria.png';
-import catPintura from '../../assets/images/cat-pintura.png';
-import catMontagem from '../../assets/images/cat-montagem.png';
-import catJardim from '../../assets/images/cat-jardim.png';
-import catReparacoes from '../../assets/images/cat-reparacoes.png';
-import catInstalacao from '../../assets/images/cat-instalacao.png';
-import catManutencao from '../../assets/images/cat-manutencao.png';
-import catExplicacoes from '../../assets/images/study.png';
-import catMecanica from '../../assets/images/mechanic.png';
-import catOutros from '../../assets/images/others.png';
+import catCanalizacao from '../../assets/images/cat-canalizacao.webp';
+import catEletricidade from '../../assets/images/cat-eletricidade.webp';
+import catCarpintaria from '../../assets/images/cat-carpintaria.webp';
+import catPintura from '../../assets/images/cat-pintura.webp';
+import catMontagem from '../../assets/images/cat-montagem.webp';
+import catJardim from '../../assets/images/cat-jardim.webp';
+import catReparacoes from '../../assets/images/cat-reparacoes.webp';
+import catInstalacao from '../../assets/images/cat-instalacao.webp';
+import catManutencao from '../../assets/images/cat-manutencao.webp';
+import catExplicacoes from '../../assets/images/study.webp';
+import catMecanica from '../../assets/images/mechanic.webp';
+import catOutros from '../../assets/images/others.webp';
 
 /* ── Translated data helper ──────────────────────────────────── */
 const t = (lang, pt, en, sv) => ({ pt, en, sv })[lang] || en;
@@ -43,6 +44,8 @@ const t = (lang, pt, en, sv) => ({ pt, en, sv })[lang] || en;
 const Home = () => {
     const [openFaq, setOpenFaq] = useState(null);
     const { lang } = useLang();
+
+    const pageTitle = lang === 'pt' ? 'Início' : lang === 'sv' ? 'Hem' : 'Home';
 
     /* ── Translated data ─── */
     const STEPS = [
@@ -128,6 +131,7 @@ const Home = () => {
 
     return (
         <>
+            <PageMeta title={pageTitle} />
             {/* ━━━ HERO ━━━ */}
             <section className="hero" id="hero" style={{ backgroundImage: `url(${heroImg})` }}>
                 <div className="hero-overlay" />

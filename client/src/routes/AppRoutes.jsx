@@ -2,6 +2,7 @@ import React, { Suspense, lazy } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import MainLayout from '../components/layout/MainLayout';
 import { ProtectedRoute } from './ProtectedRoutes';
+import ErrorBoundary from '../components/ui/ErrorBoundary';
 
 // Public Pages — Home & Login eagerly loaded for fast first paint
 import Home from '../pages/public/Home';
@@ -38,6 +39,7 @@ const Fallback = () => (
 
 const AppRoutes = () => {
     return (
+        <ErrorBoundary>
         <Suspense fallback={<Fallback />}>
             <Routes>
                 <Route element={<MainLayout />}>
@@ -77,6 +79,7 @@ const AppRoutes = () => {
                 </Route>
             </Routes>
         </Suspense>
+        </ErrorBoundary>
     );
 };
 

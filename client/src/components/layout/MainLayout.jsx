@@ -4,7 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useLang, T } from '../../context/LanguageContext';
 import { LogOut, Menu, X, ShoppingCart, ArrowLeft } from 'lucide-react';
 import NotificationBell from '../ui/NotificationBell';
-import logoImg from '../../assets/images/logo7030.png';
+import logoImg from '../../assets/images/logo7030.webp';
 import './MainLayout.css';
 
 const MainLayout = () => {

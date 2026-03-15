@@ -8,8 +8,13 @@ import {
   CreditCard, Lock, Unlock, ArrowDown, Banknote, UserCheck,
   Wallet, Building2
 } from 'lucide-react';
-import imgPayment from '../../assets/images/payment.png';
+import imgPayment from '../../assets/images/payment.webp';
+import PageMeta from '../../components/ui/PageMeta';
+import useAnalytics, { AnalyticsEvents } from '../../hooks/useAnalytics';
+import { createRateLimiter } from '../../utils/sanitize';
 import './Escrow.css';
+
+const paymentLimiter = createRateLimiter(3, 30000); // max 3 payment attempts per 30s
 
 const STEPS = [
   { key: 'booked',    icon: CreditCard,   pt: 'Reserva feita',        en: 'Booking placed',     sv: 'Bokning gjord' },
@@ -35,6 +40,7 @@ const Escrow = () => {
   const { user } = useAuth();
   const { lang } = useLang();
   const { addToast } = useNotifications();
+  const { track } = useAnalytics();
   const t = (pt, en, sv) => ({ pt, en, sv }[lang] ?? en);
 
   const [escrow, setEscrow] = useState(MOCK_ESCROW);
@@ -67,11 +73,17 @@ const Escrow = () => {
 
   const handlePayment = (e) => {
     e.preventDefault();
+    if (paymentLimiter()) {
+      addToast(t('Demasiadas tentativas. Aguarda 30s.', 'Too many attempts. Wait 30s.', 'För många försök. Vänta 30s.'), 'error');
+      return;
+    }
+    track(AnalyticsEvents.PAYMENT_STARTED, { method: payMethod, amount: escrow.amount });
     setPaymentProcessing(true);
     setTimeout(() => {
       setPaymentProcessing(false);
       setPaymentDone(true);
       setEscrow(prev => ({ ...prev, status: 'held' }));
+      track(AnalyticsEvents.PAYMENT_COMPLETED, { method: payMethod, amount: escrow.amount });
       addToast(t('Pagamento processado com sucesso!', 'Payment processed successfully!', 'Betalning genomförd!'), 'success');
     }, 2000);
   };
@@ -95,6 +107,7 @@ const Escrow = () => {
 
   return (
     <div className="escrow-page">
+      <PageMeta title={t('Pagamento', 'Payment', 'Betalning')} />
       {/* Hero */}
       <div className="escrow-hero" style={{ backgroundImage: `linear-gradient(135deg, rgba(25,55,48,0.88) 0%, rgba(13,43,34,0.75) 60%, rgba(25,55,48,0.88) 100%), url(${imgPayment})`, backgroundSize: 'cover', backgroundPosition: 'top' }}>
         <div className="container escrow-hero-inner">
@@ -127,15 +140,15 @@ const Escrow = () => {
 
           {/* Method selector */}
           <div className="escrow-pay-methods">
-            <button className={`escrow-method-btn ${payMethod === 'card' ? 'active' : ''}`} onClick={() => setPayMethod('card')}>
+            <button className={`escrow-method-btn ${payMethod === 'card' ? 'active' : ''}`} onClick={() => { setPayMethod('card'); track(AnalyticsEvents.PAYMENT_METHOD_SELECTED, { method: 'card' }); }}>
               <CreditCard size={18} />
               <T pt="Cartão" en="Card" sv="Kort" />
             </button>
-            <button className={`escrow-method-btn ${payMethod === 'paypal' ? 'active' : ''}`} onClick={() => setPayMethod('paypal')}>
+            <button className={`escrow-method-btn ${payMethod === 'paypal' ? 'active' : ''}`} onClick={() => { setPayMethod('paypal'); track(AnalyticsEvents.PAYMENT_METHOD_SELECTED, { method: 'paypal' }); }}>
               <Wallet size={18} />
               PayPal
             </button>
-            <button className={`escrow-method-btn ${payMethod === 'bank' ? 'active' : ''}`} onClick={() => setPayMethod('bank')}>
+            <button className={`escrow-method-btn ${payMethod === 'bank' ? 'active' : ''}`} onClick={() => { setPayMethod('bank'); track(AnalyticsEvents.PAYMENT_METHOD_SELECTED, { method: 'bank' }); }}>
               <Building2 size={18} />
               MB Way
             </button>

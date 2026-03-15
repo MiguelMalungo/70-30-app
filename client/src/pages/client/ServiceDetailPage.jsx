@@ -273,7 +273,7 @@ const ServiceDetailPage = () => {
                 <div key={pro.id} className="sdp-pro-card">
                   <div className="sdp-pro-avatar">
                     {pro.avatar
-                      ? <img src={pro.avatar} alt={pro.name} />
+                      ? <img src={pro.avatar} alt={pro.name} loading="lazy" />
                       : <span>{pro.initials}</span>
                     }
                   </div>

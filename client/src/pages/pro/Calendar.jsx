@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { T, useLang } from '../../context/LanguageContext';
 import { ChevronLeft, ChevronRight, Clock, MapPin, User } from 'lucide-react';
-import imgScheduling from '../../assets/images/smart_scheduling.png';
+import imgScheduling from '../../assets/images/smart_scheduling.webp';
 import './Calendar.css';
 
 const WEEKDAYS_PT = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];

@@ -11,7 +11,7 @@ import {
     Eye,
     EyeOff,
 } from 'lucide-react';
-import shakeImg from '../../assets/images/shake.png';
+import shakeImg from '../../assets/images/shake.webp';
 import './Auth.css';
 
 const Register = () => {
@@ -117,7 +117,7 @@ const Register = () => {
         <div className="auth-page reg-shake-bg">
             {/* Shake image background */}
             <div className="auth-shake-bg">
-                <img src={shakeImg} alt="" aria-hidden="true" />
+                <img src={shakeImg} alt="" aria-hidden="true" loading="lazy" />
                 <div className="auth-video-overlay" />
             </div>
 

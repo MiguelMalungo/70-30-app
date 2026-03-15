@@ -7,7 +7,7 @@ import {
   AlertCircle, CheckCircle, Shield, CalendarDays, AtSign, Star,
 } from 'lucide-react';
 import { reviewsAPI } from '../../services/api';
-import shakeImg from '../../assets/images/shake.png';
+import shakeImg from '../../assets/images/shake.webp';
 import './ProfilePage.css';
 
 /* ── Helpers ─────────────────────────────────────────────── */
@@ -138,7 +138,7 @@ const ProfilePage = () => {
 
       {/* ── Hero ── */}
       <section className="pp-hero">
-        <img src={shakeImg} alt="" className="pp-hero-img" aria-hidden="true" />
+        <img src={shakeImg} alt="" className="pp-hero-img" aria-hidden="true" loading="lazy" />
         <div className="pp-hero-overlay" />
         <div className="container pp-hero-inner">
           <div className="pp-avatar-wrap">

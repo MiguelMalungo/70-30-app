@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import stepSchedule from '../../assets/images/step-schedule.png';
+import stepSchedule from '../../assets/images/step-schedule.webp';
 import {
   Calendar, Clock, MapPin, Star, X, ChevronRight,
   CheckCircle, XCircle, AlertCircle, Hourglass, MessageSquare, Loader,
@@ -142,7 +142,7 @@ const MyBookingsPage = () => {
     <div className="bookings-page">
       {/* Hero */}
       <div className="mbp-hero">
-        <img src={stepSchedule} alt="" className="mbp-hero-img" aria-hidden="true" />
+        <img src={stepSchedule} alt="" className="mbp-hero-img" aria-hidden="true" loading="lazy" />
         <div className="mbp-hero-overlay" />
         <div className="mbp-hero-content container">
           <h1 className="mbp-hero-title"><T pt="As minhas reservas" en="My bookings" sv="Mina bokningar" /></h1>
@@ -227,7 +227,7 @@ const MyBookingsPage = () => {
                     <div className="mbp-pro-row">
                       <div className="mbp-pro-avatar">
                         {booking.professionalAvatar
-                          ? <img src={booking.professionalAvatar} alt={booking.professionalName} />
+                          ? <img src={booking.professionalAvatar} alt={booking.professionalName} loading="lazy" />
                           : <span>{booking.professionalInitials}</span>
                         }
                       </div>

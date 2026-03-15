@@ -4,8 +4,13 @@ import { T, useLang } from '../../context/LanguageContext';
 import { useNotifications } from '../../context/NotificationContext';
 import useWebSocket from '../../hooks/useWebSocket';
 import { MessageSquare, Send, Search, Circle, Clock, Image, Paperclip, Smile, CheckCheck, Wifi, WifiOff } from 'lucide-react';
-import imgPayment from '../../assets/images/payment.png';
+import imgPayment from '../../assets/images/payment.webp';
+import PageMeta from '../../components/ui/PageMeta';
+import useAnalytics, { AnalyticsEvents } from '../../hooks/useAnalytics';
+import { sanitizeMessage, createRateLimiter } from '../../utils/sanitize';
 import './Inbox.css';
+
+const messageLimiter = createRateLimiter(10, 10000); // max 10 messages per 10s
 
 const MOCK_THREADS = [
   { id: 1, name: 'Mariana Silva', initials: 'MS', lastMsg: 'Obrigada! Estou a aguardar confirmação.', time: '10:32', unread: 2, online: true },
@@ -45,6 +50,7 @@ const AUTO_REPLIES = [
 const Inbox = () => {
   const { lang } = useLang();
   const { addToast } = useNotifications();
+  const { track } = useAnalytics();
   const [activeThread, setActiveThread] = useState(1);
   const [draft, setDraft] = useState('');
   const [search, setSearch] = useState('');
@@ -82,12 +88,19 @@ const Inbox = () => {
 
   const handleSend = () => {
     if (!draft.trim() || !activeThread) return;
+    if (messageLimiter()) {
+      addToast(lang === 'pt' ? 'Demasiadas mensagens. Aguarda um momento.' : 'Too many messages. Please wait.', 'error');
+      return;
+    }
+    const sanitized = sanitizeMessage(draft);
+    if (!sanitized) return;
     const now = new Date();
     const timeStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
-    const newMsg = { id: Date.now(), from: 'me', text: draft.trim(), time: timeStr, status: 'sent' };
+    const newMsg = { id: Date.now(), from: 'me', text: sanitized, time: timeStr, status: 'sent' };
 
     // Try WebSocket first
-    const sent = send({ type: 'message', threadId: activeThread, text: draft.trim(), time: timeStr });
+    const sent = send({ type: 'message', threadId: activeThread, text: sanitized, time: timeStr });
+    track(AnalyticsEvents.MESSAGE_SENT, { threadId: activeThread, viaWebSocket: sent });
 
     // Always update local state (optimistic)
     setMessages(prev => ({ ...prev, [activeThread]: [...(prev[activeThread] || []), newMsg] }));
@@ -129,6 +142,7 @@ const Inbox = () => {
 
   return (
     <div className="inbox-page">
+      <PageMeta title={lang === 'pt' ? 'Mensagens' : lang === 'sv' ? 'Meddelanden' : 'Messages'} />
       <div className="inbox-header" style={{ backgroundImage: `linear-gradient(135deg, rgba(25,55,48,0.88) 0%, rgba(13,43,34,0.75) 60%, rgba(25,55,48,0.88) 100%), url(${imgPayment})`, backgroundSize: 'cover', backgroundPosition: 'top' }}>
         <div className="container inbox-header-inner">
           <MessageSquare size={22} />
