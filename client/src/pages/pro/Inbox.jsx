@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { T, useLang } from '../../context/LanguageContext';
 import { useNotifications } from '../../context/NotificationContext';
 import { MessageSquare, Send, Search, Circle, Clock, Image, Paperclip, Smile, CheckCheck } from 'lucide-react';
+import imgPayment from '../../assets/images/payment.png';
 import './Inbox.css';
 
 const MOCK_THREADS = [
@@ -95,7 +96,7 @@ const Inbox = () => {
 
   return (
     <div className="inbox-page">
-      <div className="inbox-header">
+      <div className="inbox-header" style={{ backgroundImage: `linear-gradient(135deg, rgba(25,55,48,0.88) 0%, rgba(13,43,34,0.75) 60%, rgba(25,55,48,0.88) 100%), url(${imgPayment})`, backgroundSize: 'cover', backgroundPosition: 'top' }}>
         <div className="container inbox-header-inner">
           <MessageSquare size={22} />
           <h1><T pt="Mensagens" en="Messages" sv="Meddelanden" /></h1>

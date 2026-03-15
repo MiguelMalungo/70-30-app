@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { T, useLang } from '../../context/LanguageContext';
 import { useNotifications } from '../../context/NotificationContext';
 import { Star, CheckCircle, User, Wrench, Calendar } from 'lucide-react';
+import imgReviews from '../../assets/images/reviews_quality.png';
 import './ReviewPage.css';
 
 const MOCK_COMPLETED = [
@@ -53,7 +54,7 @@ const ReviewPage = () => {
 
   return (
     <div className="review-page">
-      <div className="review-hero">
+      <div className="review-hero" style={{ backgroundImage: `linear-gradient(135deg, rgba(25,55,48,0.88) 0%, rgba(13,43,34,0.75) 60%, rgba(25,55,48,0.88) 100%), url(${imgReviews})`, backgroundSize: 'cover', backgroundPosition: 'top' }}>
         <div className="container">
           <p className="review-overline"><T pt="Feedback" en="Feedback" sv="Feedback" /></p>
           <h1><T pt="Avaliar serviços" en="Rate services" sv="Betygsätt tjänster" /></h1>
