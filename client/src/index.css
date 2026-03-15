@@ -52,6 +52,10 @@
   --font-family-display: var(--font-display);
   --font-family-body: var(--font-body);
 
+  /* Orange accent (used in buttons/badges) */
+  --orange-500: #f97316;
+  --orange-400: #fb923c;
+
   /* Layout */
   --radius-sm: 8px;
   --radius-md: 16px;
@@ -61,6 +65,86 @@
   --shadow-lg: 0 20px 40px -10px rgba(0, 0, 0, 0.15);
   --transition-speed: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ── Dark Mode ── */
+[data-theme="dark"] {
+  --white: #0f172a;
+  --slate-50: #1e293b;
+  --slate-100: #283548;
+  --slate-200: #334155;
+  --slate-300: #475569;
+  --slate-400: #94a3b8;
+  --slate-500: #94a3b8;
+  --slate-600: #cbd5e1;
+  --slate-700: #e2e8f0;
+  --slate-800: #f1f5f9;
+  --slate-900: #f8fafc;
+
+  --green-50: #0d2818;
+  --green-100: #14532d;
+  --green-700: #4ade80;
+  --green-800: #86efac;
+
+  --sand-50: #1a1a2e;
+  --sand-100: #22223b;
+  --sand-200: #2a2a40;
+
+  --color-base: #0f172a;
+  --color-surface: #1e293b;
+  --color-text-main: #f1f5f9;
+  --color-text-muted: #94a3b8;
+  --color-border: #334155;
+
+  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 10px 30px -5px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 20px 40px -10px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="dark"] body {
+  color: #f1f5f9;
+  background: #0f172a;
+}
+
+[data-theme="dark"] .nav::before {
+  background: rgba(15, 23, 42, 0.8);
+}
+
+[data-theme="dark"] .footer {
+  background: #0a1628;
+}
+
+[data-theme="dark"] .sp-cat-card,
+[data-theme="dark"] .review-card,
+[data-theme="dark"] .inbox-sidebar,
+[data-theme="dark"] .inbox-chat,
+[data-theme="dark"] .escrow-flow-card,
+[data-theme="dark"] .escrow-detail-card,
+[data-theme="dark"] .cal-card {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+[data-theme="dark"] .sp-cat-name,
+[data-theme="dark"] .review-card-pro,
+[data-theme="dark"] .inbox-thread-name,
+[data-theme="dark"] .inbox-chat-name {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .inbox-bubble.mine { background: #193730; }
+[data-theme="dark"] .inbox-bubble.theirs { background: #334155; color: #e2e8f0; }
+
+[data-theme="dark"] .review-form-card,
+[data-theme="dark"] .review-success {
+  background: #1e293b;
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .review-textarea {
+  background: #0f172a;
+  border-color: #334155;
+  color: #f1f5f9;
 }
 
 *,

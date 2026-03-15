@@ -1,0 +1,18 @@
+{
+  "name": "70.30 — Serviços Domésticos de Confiança",
+  "short_name": "70.30",
+  "description": "A plataforma que une gerações através de serviços domésticos.",
+  "start_url": "/70-30-app/",
+  "scope": "/70-30-app/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#193730",
+  "theme_color": "#193730",
+  "icons": [
+    { "src": "/70-30-app/pwa-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/70-30-app/pwa-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/70-30-app/pwa-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "categories": ["business", "lifestyle"],
+  "lang": "pt"
+}

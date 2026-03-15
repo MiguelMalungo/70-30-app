@@ -1,22 +1,48 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, ArrowRight } from 'lucide-react';
+import { Search, ArrowRight, MapPin, SlidersHorizontal, X } from 'lucide-react';
 import { T, useLang } from '../../context/LanguageContext';
 import { CATEGORIES, getLabel } from '../../data/mockData';
 import './ServicesPage.css';
 
+const CITIES = [
+  { id: 'all', name: { pt: 'Todas as cidades', en: 'All cities', sv: 'Alla städer' } },
+  { id: 'lisboa', name: { pt: 'Lisboa', en: 'Lisbon', sv: 'Lissabon' }, lat: 38.7223, lng: -9.1393 },
+  { id: 'porto', name: { pt: 'Porto', en: 'Porto', sv: 'Porto' }, lat: 41.1579, lng: -8.6291 },
+  { id: 'braga', name: { pt: 'Braga', en: 'Braga', sv: 'Braga' }, lat: 41.5518, lng: -8.4229 },
+  { id: 'coimbra', name: { pt: 'Coimbra', en: 'Coimbra', sv: 'Coimbra' }, lat: 40.2033, lng: -8.4103 },
+  { id: 'faro', name: { pt: 'Faro', en: 'Faro', sv: 'Faro' }, lat: 37.0194, lng: -7.9304 },
+];
+
+const SORT_OPTIONS = [
+  { id: 'popular', label: { pt: 'Mais popular', en: 'Most popular', sv: 'Mest populär' } },
+  { id: 'price-asc', label: { pt: 'Preço: menor', en: 'Price: low', sv: 'Pris: lågt' } },
+  { id: 'price-desc', label: { pt: 'Preço: maior', en: 'Price: high', sv: 'Pris: högt' } },
+  { id: 'pros', label: { pt: 'Mais profissionais', en: 'Most pros', sv: 'Flest proffs' } },
+];
+
 const ServicesPage = () => {
   const { lang } = useLang();
   const [query, setQuery] = useState('');
+  const [city, setCity] = useState('all');
+  const [sort, setSort] = useState('popular');
+  const [filtersOpen, setFiltersOpen] = useState(false);
 
-  const filtered = CATEGORIES.filter(cat =>
+  let filtered = CATEGORIES.filter(cat =>
     getLabel(cat.name, lang).toLowerCase().includes(query.toLowerCase()) ||
     getLabel(cat.desc, lang).toLowerCase().includes(query.toLowerCase())
   );
 
+  // Sort
+  if (sort === 'price-asc') filtered = [...filtered].sort((a, b) => a.startingFrom - b.startingFrom);
+  if (sort === 'price-desc') filtered = [...filtered].sort((a, b) => b.startingFrom - a.startingFrom);
+  if (sort === 'pros') filtered = [...filtered].sort((a, b) => b.proCount - a.proCount);
+
+  const selectedCity = CITIES.find(c => c.id === city);
+
   return (
     <div className="services-page">
-      {/* ── Hero Bar ── */}
+      {/* Hero Bar */}
       <section className="sp-hero">
         <div className="container">
           <div className="sp-hero-inner">
@@ -47,7 +73,46 @@ const ServicesPage = () => {
         </div>
       </section>
 
-      {/* ── Category Grid ── */}
+      {/* Filters bar */}
+      <section className="sp-filters-bar">
+        <div className="container sp-filters-inner">
+          <div className="sp-filter-group">
+            <MapPin size={16} />
+            <select
+              value={city}
+              onChange={e => setCity(e.target.value)}
+              className="sp-filter-select"
+            >
+              {CITIES.map(c => (
+                <option key={c.id} value={c.id}>{getLabel(c.name, lang)}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="sp-filter-group">
+            <SlidersHorizontal size={16} />
+            <select
+              value={sort}
+              onChange={e => setSort(e.target.value)}
+              className="sp-filter-select"
+            >
+              {SORT_OPTIONS.map(s => (
+                <option key={s.id} value={s.id}>{getLabel(s.label, lang)}</option>
+              ))}
+            </select>
+          </div>
+
+          {city !== 'all' && (
+            <div className="sp-filter-tag">
+              <MapPin size={12} />
+              {getLabel(selectedCity.name, lang)}
+              <button onClick={() => setCity('all')} className="sp-filter-tag-x"><X size={12} /></button>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Category Grid */}
       <section className="sp-grid-section">
         <div className="container">
           {filtered.length === 0 ? (
@@ -58,6 +123,11 @@ const ServicesPage = () => {
             <>
               <p className="sp-results-count">
                 {filtered.length} <T pt="categorias disponíveis" en="categories available" sv="kategorier tillgängliga" />
+                {city !== 'all' && (
+                  <span className="sp-results-city">
+                    {' '}<T pt="em" en="in" sv="i" /> {getLabel(selectedCity.name, lang)}
+                  </span>
+                )}
               </p>
               <div className="sp-categories-grid">
                 {filtered.map(cat => (
@@ -78,6 +148,11 @@ const ServicesPage = () => {
                         <div className="sp-cat-meta">
                           <span className="sp-cat-subs">{cat.subCount} <T pt="serviços" en="services" sv="tjänster" /></span>
                           <span className="sp-cat-pros">{cat.proCount} <T pt="profissionais" en="professionals" sv="proffs" /></span>
+                          {city !== 'all' && (
+                            <span className="sp-cat-location">
+                              <MapPin size={11} /> {getLabel(selectedCity.name, lang)}
+                            </span>
+                          )}
                         </div>
                         <div className="sp-cat-price">
                           <span className="sp-cat-price-from"><T pt="A partir de" en="From" sv="Från" /></span>
@@ -97,7 +172,7 @@ const ServicesPage = () => {
         </div>
       </section>
 
-      {/* ── Bottom Trust ── */}
+      {/* Bottom Trust */}
       <section className="sp-trust">
         <div className="container sp-trust-inner">
           <div className="sp-trust-item">

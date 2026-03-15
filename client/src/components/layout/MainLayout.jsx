@@ -2,7 +2,8 @@ import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useLang, T } from '../../context/LanguageContext';
-import { LogOut, Menu, X, ShoppingCart, ArrowLeft } from 'lucide-react';
+import { LogOut, Menu, X, ShoppingCart, ArrowLeft, Moon, Sun } from 'lucide-react';
+import { useTheme } from '../../context/ThemeContext';
 import NotificationBell from '../ui/NotificationBell';
 import logoImg from '../../assets/images/logo7030.png';
 import './MainLayout.css';
@@ -10,6 +11,7 @@ import './MainLayout.css';
 const MainLayout = () => {
     const { user, logout } = useAuth();
     const { lang, setLang } = useLang();
+    const { dark, toggleTheme } = useTheme();
     const navigate = useNavigate();
     const location = useLocation();
     const [scrolled, setScrolled] = useState(false);
@@ -89,6 +91,9 @@ const MainLayout = () => {
                                             <button onClick={() => setLang('en')} className={lang === 'en' ? 'active' : ''}>EN</button>
                                             <button onClick={() => setLang('sv')} className={lang === 'sv' ? 'active' : ''}>SV</button>
                                         </div>
+                                        <button onClick={toggleTheme} className="nav-theme-btn" title={dark ? 'Light mode' : 'Dark mode'}>
+                                            {dark ? <Sun size={18} /> : <Moon size={18} />}
+                                        </button>
                                         {!isAuthPage && (
                                             <button className="nav-cart-btn" title="Cart">
                                                 <ShoppingCart size={18} />
@@ -136,6 +141,9 @@ const MainLayout = () => {
                                             <button onClick={() => setLang('en')} className={lang === 'en' ? 'active' : ''}>EN</button>
                                             <button onClick={() => setLang('sv')} className={lang === 'sv' ? 'active' : ''}>SV</button>
                                         </div>
+                                        <button onClick={toggleTheme} className="nav-theme-btn" title={dark ? 'Light mode' : 'Dark mode'}>
+                                            {dark ? <Sun size={18} /> : <Moon size={18} />}
+                                        </button>
                                     </div>
                                 </li>
                             </>

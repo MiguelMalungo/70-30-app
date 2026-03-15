@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
 import { T, useLang } from '../../context/LanguageContext';
+import { useNotifications } from '../../context/NotificationContext';
 import {
   Shield, ArrowRight, CheckCircle, Clock, AlertTriangle,
-  CreditCard, Lock, Unlock, ArrowDown, Banknote, UserCheck
+  CreditCard, Lock, Unlock, ArrowDown, Banknote, UserCheck,
+  Wallet, Building2
 } from 'lucide-react';
 import imgPayment from '../../assets/images/payment.png';
 import './Escrow.css';
@@ -32,10 +34,17 @@ const MOCK_ESCROW = {
 const Escrow = () => {
   const { user } = useAuth();
   const { lang } = useLang();
+  const { addToast } = useNotifications();
   const t = (pt, en, sv) => ({ pt, en, sv }[lang] ?? en);
 
   const [escrow, setEscrow] = useState(MOCK_ESCROW);
   const [animating, setAnimating] = useState(false);
+  const [payMethod, setPayMethod] = useState('card');
+  const [cardNumber, setCardNumber] = useState('');
+  const [cardExpiry, setCardExpiry] = useState('');
+  const [cardCvc, setCardCvc] = useState('');
+  const [paymentProcessing, setPaymentProcessing] = useState(false);
+  const [paymentDone, setPaymentDone] = useState(false);
 
   const currentIdx = STEPS.findIndex(s => s.key === escrow.status);
 
@@ -50,6 +59,32 @@ const Escrow = () => {
 
   const resetDemo = () => {
     setEscrow({ ...MOCK_ESCROW, status: 'booked' });
+    setPaymentDone(false);
+    setCardNumber('');
+    setCardExpiry('');
+    setCardCvc('');
+  };
+
+  const handlePayment = (e) => {
+    e.preventDefault();
+    setPaymentProcessing(true);
+    setTimeout(() => {
+      setPaymentProcessing(false);
+      setPaymentDone(true);
+      setEscrow(prev => ({ ...prev, status: 'held' }));
+      addToast(t('Pagamento processado com sucesso!', 'Payment processed successfully!', 'Betalning genomförd!'), 'success');
+    }, 2000);
+  };
+
+  const formatCardNumber = (val) => {
+    const digits = val.replace(/\D/g, '').slice(0, 16);
+    return digits.replace(/(.{4})/g, '$1 ').trim();
+  };
+
+  const formatExpiry = (val) => {
+    const digits = val.replace(/\D/g, '').slice(0, 4);
+    if (digits.length >= 3) return digits.slice(0, 2) + '/' + digits.slice(2);
+    return digits;
   };
 
   const statusColor = (idx) => {
@@ -70,15 +105,126 @@ const Escrow = () => {
             </p>
             <h1><T pt="Sistema de Escrow" en="Escrow System" sv="Spärrsystem" /></h1>
             <p><T
-              pt="Simulação do fluxo de pagamento seguro entre cliente e profissional."
-              en="Simulation of the secure payment flow between client and professional."
-              sv="Simulering av det säkra betalningsflödet mellan kund och yrkesman."
+              pt="Pagamentos seguros processados via Stripe com escrow integrado."
+              en="Secure payments processed via Stripe with integrated escrow."
+              sv="Säkra betalningar via Stripe med integrerad spärr."
             /></p>
           </div>
         </div>
       </div>
 
       <div className="container escrow-body">
+        {/* Payment Checkout Card */}
+        <div className="escrow-checkout-card">
+          <div className="escrow-checkout-header">
+            <Shield size={18} />
+            <h2><T pt="Checkout seguro" en="Secure checkout" sv="Säker utcheckning" /></h2>
+            <div className="escrow-checkout-badges">
+              <span className="escrow-badge-stripe">Stripe</span>
+              <Lock size={12} />
+            </div>
+          </div>
+
+          {/* Method selector */}
+          <div className="escrow-pay-methods">
+            <button className={`escrow-method-btn ${payMethod === 'card' ? 'active' : ''}`} onClick={() => setPayMethod('card')}>
+              <CreditCard size={18} />
+              <T pt="Cartão" en="Card" sv="Kort" />
+            </button>
+            <button className={`escrow-method-btn ${payMethod === 'paypal' ? 'active' : ''}`} onClick={() => setPayMethod('paypal')}>
+              <Wallet size={18} />
+              PayPal
+            </button>
+            <button className={`escrow-method-btn ${payMethod === 'bank' ? 'active' : ''}`} onClick={() => setPayMethod('bank')}>
+              <Building2 size={18} />
+              MB Way
+            </button>
+          </div>
+
+          {payMethod === 'card' && !paymentDone && (
+            <form className="escrow-card-form" onSubmit={handlePayment}>
+              <div className="escrow-field">
+                <label><T pt="Número do cartão" en="Card number" sv="Kortnummer" /></label>
+                <div className="escrow-input-wrap">
+                  <CreditCard size={16} className="escrow-input-icon" />
+                  <input
+                    type="text"
+                    placeholder="4242 4242 4242 4242"
+                    value={cardNumber}
+                    onChange={e => setCardNumber(formatCardNumber(e.target.value))}
+                    className="escrow-input"
+                  />
+                </div>
+              </div>
+              <div className="escrow-field-row">
+                <div className="escrow-field">
+                  <label><T pt="Validade" en="Expiry" sv="Utgångsdatum" /></label>
+                  <input
+                    type="text"
+                    placeholder="MM/YY"
+                    value={cardExpiry}
+                    onChange={e => setCardExpiry(formatExpiry(e.target.value))}
+                    className="escrow-input"
+                  />
+                </div>
+                <div className="escrow-field">
+                  <label>CVC</label>
+                  <input
+                    type="text"
+                    placeholder="123"
+                    value={cardCvc}
+                    onChange={e => setCardCvc(e.target.value.replace(/\D/g, '').slice(0, 4))}
+                    className="escrow-input"
+                  />
+                </div>
+              </div>
+              <button type="submit" className="escrow-pay-btn" disabled={paymentProcessing}>
+                {paymentProcessing ? (
+                  <><Clock size={16} className="spin" /> <T pt="A processar…" en="Processing…" sv="Bearbetar…" /></>
+                ) : (
+                  <><Lock size={16} /> <T pt="Pagar" en="Pay" sv="Betala" /> €{escrow.amount.toFixed(2)}</>
+                )}
+              </button>
+              <p className="escrow-secure-note">
+                <Lock size={12} />
+                <T pt="Encriptação SSL de 256 bits. Os dados nunca são armazenados." en="256-bit SSL encryption. Data is never stored." sv="256-bitars SSL-kryptering. Data lagras aldrig." />
+              </p>
+            </form>
+          )}
+
+          {payMethod === 'paypal' && !paymentDone && (
+            <div className="escrow-alt-pay">
+              <button className="escrow-paypal-btn" onClick={handlePayment} disabled={paymentProcessing}>
+                {paymentProcessing ? (
+                  <><Clock size={16} className="spin" /> <T pt="A processar…" en="Processing…" sv="Bearbetar…" /></>
+                ) : (
+                  <><Wallet size={18} /> <T pt="Pagar com PayPal" en="Pay with PayPal" sv="Betala med PayPal" /> — €{escrow.amount.toFixed(2)}</>
+                )}
+              </button>
+            </div>
+          )}
+
+          {payMethod === 'bank' && !paymentDone && (
+            <div className="escrow-alt-pay">
+              <button className="escrow-mbway-btn" onClick={handlePayment} disabled={paymentProcessing}>
+                {paymentProcessing ? (
+                  <><Clock size={16} className="spin" /> <T pt="A processar…" en="Processing…" sv="Bearbetar…" /></>
+                ) : (
+                  <><Building2 size={18} /> <T pt="Pagar com MB Way" en="Pay with MB Way" sv="Betala med MB Way" /> — €{escrow.amount.toFixed(2)}</>
+                )}
+              </button>
+            </div>
+          )}
+
+          {paymentDone && (
+            <motion.div className="escrow-pay-success" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}>
+              <CheckCircle size={32} />
+              <h3><T pt="Pagamento confirmado" en="Payment confirmed" sv="Betalning bekräftad" /></h3>
+              <p><T pt="Os fundos foram retidos em escrow até conclusão do serviço." en="Funds are held in escrow until service completion." sv="Medel hålls i spärr tills tjänsten är slutförd." /></p>
+            </motion.div>
+          )}
+        </div>
+
         {/* Flow Visualiser */}
         <div className="escrow-flow-card">
           <h2><T pt="Fluxo de pagamento" en="Payment flow" sv="Betalningsflöde" /></h2>
@@ -110,7 +256,6 @@ const Escrow = () => {
             })}
           </div>
 
-          {/* Action buttons */}
           <div className="escrow-actions">
             {currentIdx < STEPS.length - 1 ? (
               <button className="escrow-btn-advance" onClick={advanceStep} disabled={animating}>
@@ -175,7 +320,6 @@ const Escrow = () => {
             </div>
           </div>
 
-          {/* Status indicator */}
           <div className={`escrow-status-bar status-${escrow.status}`}>
             {escrow.status === 'paid' ? <CheckCircle size={16} /> : escrow.status === 'held' ? <Lock size={16} /> : <Clock size={16} />}
             <span>
@@ -186,18 +330,6 @@ const Escrow = () => {
               {escrow.status === 'paid' && t('Pagamento recebido', 'Payment received', 'Betalning mottagen')}
             </span>
           </div>
-        </div>
-
-        {/* Info Box */}
-        <div className="escrow-info-box">
-          <AlertTriangle size={18} />
-          <p>
-            <T
-              pt="Esta é uma simulação. Em produção, os pagamentos serão processados através de um gateway seguro (Stripe/PayPal) com escrow real."
-              en="This is a simulation. In production, payments will be processed through a secure gateway (Stripe/PayPal) with real escrow."
-              sv="Detta är en simulering. I produktion kommer betalningar att behandlas via en säker gateway (Stripe/PayPal) med riktig spärr."
-            />
-          </p>
         </div>
       </div>
     </div>

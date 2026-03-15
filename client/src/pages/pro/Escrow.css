@@ -122,6 +122,103 @@
 .status-released { background: #ecfdf5; color: #059669; }
 .status-paid   { background: #ecfdf5; color: #059669; }
 
+/* ─── Checkout Card (Stripe-style) ─── */
+.escrow-checkout-card {
+  background: #fff; border-radius: 16px; padding: 28px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  border: 1.5px solid #e2e8f0;
+}
+.escrow-checkout-header {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 20px;
+  color: #193730;
+}
+.escrow-checkout-header h2 { font-size: 1.1rem; font-weight: 700; margin: 0; flex: 1; }
+.escrow-checkout-badges { display: flex; align-items: center; gap: 6px; }
+.escrow-badge-stripe {
+  background: linear-gradient(135deg, #635bff, #7c3aed);
+  color: #fff; font-size: 0.72rem; font-weight: 700;
+  padding: 3px 10px; border-radius: 6px; letter-spacing: 0.05em;
+}
+
+/* Payment methods */
+.escrow-pay-methods { display: flex; gap: 8px; margin-bottom: 20px; }
+.escrow-method-btn {
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  gap: 6px; padding: 12px; border: 1.5px solid #e2e8f0;
+  border-radius: 10px; font-size: 0.85rem; font-weight: 600;
+  color: #64748b; background: #fff; cursor: pointer;
+  transition: all 0.2s;
+}
+.escrow-method-btn:hover { border-color: #94a3b8; }
+.escrow-method-btn.active {
+  border-color: #193730; color: #193730;
+  background: #f0fdf4; box-shadow: 0 0 0 2px rgba(25,55,48,0.1);
+}
+
+/* Card form */
+.escrow-card-form { display: flex; flex-direction: column; gap: 14px; }
+.escrow-field { display: flex; flex-direction: column; gap: 4px; }
+.escrow-field label { font-size: 0.78rem; font-weight: 600; color: #475569; }
+.escrow-field-row { display: flex; gap: 12px; }
+.escrow-field-row .escrow-field { flex: 1; }
+
+.escrow-input-wrap { position: relative; }
+.escrow-input-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #94a3b8; }
+.escrow-input {
+  width: 100%; padding: 12px 14px; border: 1.5px solid #e2e8f0;
+  border-radius: 8px; font-size: 0.9rem; font-family: 'SF Mono', 'Fira Code', monospace;
+  outline: none; background: #f8fafc; transition: border-color 0.2s;
+  color: #1e293b;
+}
+.escrow-input-wrap .escrow-input { padding-left: 38px; }
+.escrow-input:focus { border-color: #193730; background: #fff; }
+.escrow-input::placeholder { color: #cbd5e1; }
+
+/* Pay button */
+.escrow-pay-btn {
+  width: 100%; padding: 14px; border: none; border-radius: 10px;
+  background: linear-gradient(135deg, #635bff, #7c3aed);
+  color: #fff; font-size: 0.95rem; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  cursor: pointer; transition: opacity 0.2s; margin-top: 4px;
+}
+.escrow-pay-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+.escrow-pay-btn:hover:not(:disabled) { opacity: 0.9; }
+
+.escrow-secure-note {
+  display: flex; align-items: center; justify-content: center;
+  gap: 6px; font-size: 0.72rem; color: #94a3b8; margin: 4px 0 0;
+}
+
+/* Alt pay buttons */
+.escrow-alt-pay { padding: 20px 0; }
+.escrow-paypal-btn {
+  width: 100%; padding: 14px; border: none; border-radius: 10px;
+  background: #ffc439; color: #003087; font-size: 0.95rem; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  cursor: pointer; transition: opacity 0.2s;
+}
+.escrow-paypal-btn:hover:not(:disabled) { opacity: 0.9; }
+.escrow-paypal-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.escrow-mbway-btn {
+  width: 100%; padding: 14px; border: none; border-radius: 10px;
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  color: #fff; font-size: 0.95rem; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  cursor: pointer; transition: opacity 0.2s;
+}
+.escrow-mbway-btn:hover:not(:disabled) { opacity: 0.9; }
+.escrow-mbway-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* Payment success */
+.escrow-pay-success {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 8px; padding: 32px 20px; text-align: center; color: #059669;
+}
+.escrow-pay-success h3 { font-size: 1.1rem; margin: 0; }
+.escrow-pay-success p { font-size: 0.85rem; color: #64748b; margin: 0; }
+
 /* Info Box */
 .escrow-info-box {
   display: flex; gap: 12px; align-items: flex-start;
