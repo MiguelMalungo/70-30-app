@@ -6,6 +6,7 @@ import {
   Shield, ArrowRight, CheckCircle, Clock, AlertTriangle,
   CreditCard, Lock, Unlock, ArrowDown, Banknote, UserCheck
 } from 'lucide-react';
+import imgPayment from '../../assets/images/payment.png';
 import './Escrow.css';
 
 const STEPS = [
@@ -60,7 +61,7 @@ const Escrow = () => {
   return (
     <div className="escrow-page">
       {/* Hero */}
-      <div className="escrow-hero">
+      <div className="escrow-hero" style={{ backgroundImage: `linear-gradient(135deg, rgba(25,55,48,0.88) 0%, rgba(13,43,34,0.75) 60%, rgba(25,55,48,0.88) 100%), url(${imgPayment})`, backgroundSize: 'cover', backgroundPosition: 'top' }}>
         <div className="container escrow-hero-inner">
           <div className="escrow-hero-text">
             <p className="escrow-overline">
