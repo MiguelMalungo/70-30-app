@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { T, useLang } from '../../context/LanguageContext';
 import {
   User, Mail, MapPin, Edit2, Check, X, Loader,
-  AlertCircle, CheckCircle, Shield, CalendarDays, AtSign,
+  AlertCircle, CheckCircle, Shield, CalendarDays, AtSign, Star,
 } from 'lucide-react';
+import { reviewsAPI } from '../../services/api';
 import shakeImg from '../../assets/images/shake.png';
 import './ProfilePage.css';
 
@@ -28,6 +29,20 @@ const ProfilePage = () => {
   const [saving, setSaving]     = useState(false);
   const [locating, setLocating] = useState(false);
   const [feedback, setFeedback] = useState(null); // { type: 'success'|'error', msg }
+  const [reviews, setReviews]   = useState([]);
+
+  useEffect(() => {
+    reviewsAPI.list().then(({ data }) => {
+      const results = Array.isArray(data) ? data : data.results || [];
+      setReviews(results);
+    }).catch(() => {
+      // No reviews or API unavailable
+    });
+  }, []);
+
+  const avgRating = reviews.length
+    ? (reviews.reduce((s, r) => s + (r.rating || 0), 0) / reviews.length).toFixed(1)
+    : null;
 
   const [form, setForm] = useState({
     first_name: user?.firstName || '',
@@ -378,6 +393,48 @@ const ProfilePage = () => {
                 </button>
               </div>
             </div>
+
+            {/* Reviews card */}
+            {reviews.length > 0 && (
+              <div className="pp-card pp-reviews-card">
+                <div className="pp-card-header">
+                  <h2 className="pp-card-title"><T pt="As minhas avaliações" en="My reviews" sv="Mina omdömen" /></h2>
+                </div>
+                <div className="pp-reviews-summary">
+                  <div className="pp-reviews-avg">
+                    <Star size={28} fill="currentColor" className="pp-star-icon" />
+                    <span className="pp-avg-number">{avgRating}</span>
+                  </div>
+                  <p className="pp-reviews-count">
+                    {reviews.length} <T pt="avaliações recebidas" en="reviews received" sv="omdömen mottagna" />
+                  </p>
+                  <div className="pp-star-bars">
+                    {[5,4,3,2,1].map(n => {
+                      const count = reviews.filter(r => r.rating === n).length;
+                      const pct = reviews.length ? (count / reviews.length) * 100 : 0;
+                      return (
+                        <div key={n} className="pp-star-bar-row">
+                          <span className="pp-star-label">{n}★</span>
+                          <div className="pp-star-bar-track"><div className="pp-star-bar-fill" style={{ width: `${pct}%` }} /></div>
+                          <span className="pp-star-bar-count">{count}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+                <div className="pp-reviews-list">
+                  {reviews.slice(0, 3).map((r, i) => (
+                    <div key={i} className="pp-review-item">
+                      <div className="pp-review-header">
+                        <span className="pp-review-stars">{'★'.repeat(r.rating)}{'☆'.repeat(5 - r.rating)}</span>
+                        <span className="pp-review-author">{r.author_name || 'Cliente'}</span>
+                      </div>
+                      {r.comment && <p className="pp-review-text">&ldquo;{r.comment}&rdquo;</p>}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
           </div>{/* /pp-right-col */}
         </div>{/* /pp-grid */}

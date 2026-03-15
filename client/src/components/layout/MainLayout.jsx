@@ -115,10 +115,11 @@ const MainLayout = () => {
                                     </>
                                 )}
 
-                                {(['MASTER', 'MENTOR'].includes(user.role)) && (
+                                {(['MASTER', 'MENTOR', 'APPRENTICE'].includes(user.role)) && (
                                     <>
-                                        <li><Link to="/pro" onClick={closeMobile}>Jobs</Link></li>
-                                        <li><Link to="/pro/community" onClick={closeMobile}>Community</Link></li>
+                                        <li><Link to="/pro" onClick={closeMobile}><T pt="Os meus gigs" en="My Gigs" sv="Mina jobb" /></Link></li>
+                                        <li><Link to="/pro/community" onClick={closeMobile}><T pt="Comunidade" en="Community" sv="Gemenskap" /></Link></li>
+                                        <li><Link to="/pro/inbox" onClick={closeMobile}><T pt="Mensagens" en="Messages" sv="Meddelanden" /></Link></li>
                                     </>
                                 )}
 

@@ -8,6 +8,7 @@ import Home from '../pages/public/Home';
 import Login from '../pages/public/Login';
 import Register from '../pages/public/Register';
 import Demo from '../pages/public/Demo';
+import Onboarding from '../pages/public/Onboarding';
 
 // Client Pages
 import ClientDashboard from '../pages/client/Dashboard';
@@ -21,6 +22,7 @@ import ProfilePage from '../pages/client/ProfilePage';
 // Pro Pages (Mentor & Mentee / Apprentice)
 import ProDashboard from '../pages/pro/Dashboard';
 import Community from '../pages/pro/Community';
+import Inbox from '../pages/pro/Inbox';
 
 // Admin Page
 import AdminDashboard from '../pages/admin/Dashboard';
@@ -34,6 +36,7 @@ const AppRoutes = () => {
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/demo" element={<Demo />} />
+                <Route path="/onboarding" element={<Onboarding />} />
 
                 {/* Client Protected Routes */}
                 <Route element={<ProtectedRoute allowedRoles={['CLIENT', 'MENTEE', 'APPRENTICE']} />}>
@@ -50,6 +53,7 @@ const AppRoutes = () => {
                 <Route element={<ProtectedRoute allowedRoles={['MENTOR', 'MENTEE', 'MASTER', 'APPRENTICE']} />}>
                     <Route path="/pro" element={<ProDashboard />} />
                     <Route path="/pro/community" element={<Community />} />
+                    <Route path="/pro/inbox" element={<Inbox />} />
                 </Route>
 
                 {/* Admin Protected Routes */}

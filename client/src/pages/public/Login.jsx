@@ -6,7 +6,7 @@ import { Award, Sprout, ArrowRight, AlertCircle, Eye, EyeOff } from 'lucide-reac
 import './Auth.css';
 
 const Login = () => {
-    const { login, getRoleRedirect } = useAuth();
+    const { login, getRoleRedirect, devLogin } = useAuth();
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const { lang } = useLang();
@@ -180,6 +180,19 @@ const Login = () => {
                                 <T pt="Esqueci a palavra-passe" en="Forgot password" sv="Glömt lösenordet" />
                             </button>
                         </div>
+
+                        {/* Demo quick-access buttons */}
+                        <div className="auth-demo-row">
+                            <button type="button" className="auth-demo-btn" onClick={() => navigate('/demo')}>
+                                🔍 <T pt="Demo cliente" en="Client" sv="Klient" />
+                            </button>
+                            <button type="button" className="auth-demo-btn auth-demo-btn--pro" onClick={() => { devLogin('MENTOR'); navigate('/pro'); }}>
+                                🛠 Mentor
+                            </button>
+                            <button type="button" className="auth-demo-btn auth-demo-btn--apprentice" onClick={() => { devLogin('APPRENTICE'); navigate('/pro'); }}>
+                                🌱 <T pt="Aprendiz" en="Apprentice" sv="Lärling" />
+                            </button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -191,14 +204,6 @@ const Login = () => {
                     <T pt="Criar conta" en="Create account" sv="Skapa konto" />
                 </Link>
             </div>
-
-            {/* Demo preview button */}
-            <button
-                className="auth-demo-btn"
-                onClick={() => navigate('/demo')}
-            >
-                🔍 <T pt="Ver demo sem conta" en="Preview demo" sv="Förhandsgranska demo" />
-            </button>
         </div>
     );
 };

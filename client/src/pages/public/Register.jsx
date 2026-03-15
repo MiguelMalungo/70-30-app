@@ -81,7 +81,8 @@ const Register = () => {
                 lastName: form.lastName.trim(),
             });
             setSuccess(true);
-            setTimeout(() => navigate('/login'), 2500);
+            const isPro = ['MENTOR', 'MASTER', 'APPRENTICE'].includes(selectedRole);
+            setTimeout(() => navigate(`/onboarding?role=${selectedRole || 'CLIENT'}`), 1500);
         } catch (err) {
             const data = err.response?.data;
             if (data && typeof data === 'object') {
