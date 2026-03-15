@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import {
   ChevronRight, ChevronLeft, Check,
-  Calendar, Clock, MapPin, User, Star,
+  Calendar, Clock, MapPin, User, Star, CreditCard,
   CheckCircle, CalendarClock, Loader, AlertCircle,
 } from 'lucide-react';
 import { T, useLang } from '../../context/LanguageContext';
@@ -156,9 +156,15 @@ const Wizard = () => {
             {selectedDate && <div className="ws-row"><Calendar size={14} /> {formatDate(selectedDate)} – {selectedTime}</div>}
             {address && <div className="ws-row"><MapPin size={14} /> {address}</div>}
           </div>
-          <button className="btn-primary" onClick={handleDone}>
-            <T pt="Ver as minhas reservas" en="View my bookings" sv="Se mina bokningar" />
-          </button>
+          <div className="ws-actions">
+            <button className="btn-primary" onClick={() => navigate('/client/escrow')}>
+              <CreditCard size={16} />
+              <T pt="Pagar agora" en="Pay now" sv="Betala nu" />
+            </button>
+            <button className="btn-secondary" onClick={handleDone}>
+              <T pt="Ver as minhas reservas" en="View my bookings" sv="Se mina bokningar" />
+            </button>
+          </div>
         </div>
       </div>
     );

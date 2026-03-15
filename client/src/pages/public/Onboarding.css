@@ -32,7 +32,7 @@
   display: flex; align-items: center; justify-content: center;
   margin-bottom: 16px;
 }
-.ob-step-icon.pro { background: linear-gradient(135deg, #dbeafe, #bfdbfe); color: #1d4ed8; }
+.ob-step-icon.pro { background: linear-gradient(135deg, #d8f0d8, #aedcae); color: #193730; }
 .ob-step h2 { font-size: 1.5rem; font-weight: 700; color: var(--slate-900, #0f172a); margin-bottom: 6px; }
 .ob-step-desc { font-size: 0.92rem; color: var(--slate-500, #64748b); margin-bottom: 24px; }
 

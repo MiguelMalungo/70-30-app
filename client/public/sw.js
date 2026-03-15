@@ -20,6 +20,36 @@ self.addEventListener('activate', (e) => {
   self.clients.claim();
 });
 
+/* ─── Push Notifications ─── */
+self.addEventListener('push', (e) => {
+  let data = { title: '70.30', body: 'Tens uma nova notificação.', icon: '/70-30-app/pwa-192.png' };
+  try {
+    if (e.data) data = { ...data, ...e.data.json() };
+  } catch { /* use defaults */ }
+
+  e.waitUntil(
+    self.registration.showNotification(data.title, {
+      body: data.body,
+      icon: data.icon,
+      badge: '/70-30-app/pwa-192.png',
+      data: data.url || '/',
+    })
+  );
+});
+
+self.addEventListener('notificationclick', (e) => {
+  e.notification.close();
+  const url = e.notification.data || '/';
+  e.waitUntil(
+    self.clients.matchAll({ type: 'window' }).then((clients) => {
+      for (const client of clients) {
+        if (client.url.includes(url) && 'focus' in client) return client.focus();
+      }
+      return self.clients.openWindow(url);
+    })
+  );
+});
+
 self.addEventListener('fetch', (e) => {
   if (e.request.method !== 'GET') return;
   e.respondWith(

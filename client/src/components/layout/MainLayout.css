@@ -197,34 +197,6 @@
 }
 
 /* ─── Cart Button ─── */
-/* ─── Theme toggle ─── */
-.nav-theme-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  color: white;
-  transition: all 0.3s;
-  flex-shrink: 0;
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  cursor: pointer;
-}
-.nav.scrolled .nav-theme-btn {
-  background: var(--slate-50);
-  border-color: var(--slate-200);
-  color: var(--slate-700);
-}
-.nav-theme-btn:hover {
-  background: rgba(255, 255, 255, 0.25);
-  transform: translateY(-1px);
-}
-.nav.scrolled .nav-theme-btn:hover {
-  background: var(--green-50);
-  color: var(--green-600);
-}
 
 .nav-cart-btn {
   position: relative;

@@ -116,7 +116,7 @@
   display: flex; align-items: center; gap: 8px;
   font-size: 0.82rem; font-weight: 600;
 }
-.status-booked { background: #eff6ff; color: #2563eb; }
+.status-booked { background: #f0f9f0; color: #193730; }
 .status-held   { background: #fff7ed; color: #ea580c; }
 .status-service { background: #fefce8; color: #ca8a04; }
 .status-released { background: #ecfdf5; color: #059669; }

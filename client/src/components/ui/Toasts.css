@@ -14,7 +14,7 @@
 }
 .toast-success { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
 .toast-warning { background: #fffbeb; color: #92400e; border: 1px solid #fde68a; }
-.toast-info    { background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; }
+.toast-info    { background: #f0f9f0; color: #193730; border: 1px solid #aedcae; }
 .toast-error   { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
 .toast-dismiss {
   background: none; border: none; cursor: pointer;

@@ -1,8 +1,9 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { T, useLang } from '../../context/LanguageContext';
 import { useNotifications } from '../../context/NotificationContext';
-import { MessageSquare, Send, Search, Circle, Clock, Image, Paperclip, Smile, CheckCheck } from 'lucide-react';
+import useWebSocket from '../../hooks/useWebSocket';
+import { MessageSquare, Send, Search, Circle, Clock, Image, Paperclip, Smile, CheckCheck, Wifi, WifiOff } from 'lucide-react';
 import imgPayment from '../../assets/images/payment.png';
 import './Inbox.css';
 
@@ -52,6 +53,26 @@ const Inbox = () => {
   const [typing, setTyping] = useState(false);
   const messagesEndRef = useRef(null);
 
+  // WebSocket — connects when backend is available, falls back to mock
+  const handleWsMessage = useCallback((data) => {
+    const msg = { id: Date.now(), from: 'other', text: data.text, time: data.time, status: 'delivered' };
+    setMessages(prev => ({ ...prev, [data.threadId]: [...(prev[data.threadId] || []), msg] }));
+    setThreads(prev => prev.map(t => t.id === data.threadId
+      ? { ...t, lastMsg: data.text, time: data.time, unread: data.threadId === activeThread ? 0 : t.unread + 1 }
+      : t
+    ));
+  }, [activeThread]);
+
+  const handleWsTyping = useCallback(() => {
+    setTyping(true);
+    setTimeout(() => setTyping(false), 2000);
+  }, []);
+
+  const { connected, send, sendTyping } = useWebSocket(activeThread, {
+    onMessage: handleWsMessage,
+    onTyping: handleWsTyping,
+  });
+
   const scrollToBottom = () => messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   useEffect(scrollToBottom, [messages, activeThread, typing]);
 
@@ -64,6 +85,11 @@ const Inbox = () => {
     const now = new Date();
     const timeStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
     const newMsg = { id: Date.now(), from: 'me', text: draft.trim(), time: timeStr, status: 'sent' };
+
+    // Try WebSocket first
+    const sent = send({ type: 'message', threadId: activeThread, text: draft.trim(), time: timeStr });
+
+    // Always update local state (optimistic)
     setMessages(prev => ({ ...prev, [activeThread]: [...(prev[activeThread] || []), newMsg] }));
     setThreads(prev => prev.map(t => t.id === activeThread ? { ...t, lastMsg: draft.trim(), time: timeStr, unread: 0 } : t));
     setDraft('');
@@ -76,19 +102,26 @@ const Inbox = () => {
       }));
     }, 1000);
 
-    // Simulate typing + auto-reply if thread contact is online
-    const thread = threads.find(t => t.id === activeThread);
-    if (thread?.online) {
-      setTimeout(() => setTyping(true), 1500);
-      setTimeout(() => {
-        setTyping(false);
-        const reply = AUTO_REPLIES[Math.floor(Math.random() * AUTO_REPLIES.length)];
-        const replyMsg = { id: Date.now() + 1, from: 'other', text: reply, time: timeStr, status: 'delivered' };
-        setMessages(prev => ({ ...prev, [activeThread]: [...(prev[activeThread] || []), replyMsg] }));
-        setThreads(prev => prev.map(t => t.id === activeThread ? { ...t, lastMsg: reply, time: timeStr } : t));
-        addToast(`${thread.name}: "${reply}"`, 'info');
-      }, 3500);
+    // If WebSocket not connected, use mock auto-reply
+    if (!sent) {
+      const thread = threads.find(t => t.id === activeThread);
+      if (thread?.online) {
+        setTimeout(() => setTyping(true), 1500);
+        setTimeout(() => {
+          setTyping(false);
+          const reply = AUTO_REPLIES[Math.floor(Math.random() * AUTO_REPLIES.length)];
+          const replyMsg = { id: Date.now() + 1, from: 'other', text: reply, time: timeStr, status: 'delivered' };
+          setMessages(prev => ({ ...prev, [activeThread]: [...(prev[activeThread] || []), replyMsg] }));
+          setThreads(prev => prev.map(t => t.id === activeThread ? { ...t, lastMsg: reply, time: timeStr } : t));
+          addToast(`${thread.name}: "${reply}"`, 'info');
+        }, 3500);
+      }
     }
+  };
+
+  const handleDraftChange = (e) => {
+    setDraft(e.target.value);
+    if (connected) sendTyping();
   };
 
   const currentThread = threads.find(t => t.id === activeThread);
@@ -103,6 +136,9 @@ const Inbox = () => {
           {threads.reduce((s, t) => s + t.unread, 0) > 0 && (
             <span className="inbox-unread-badge">{threads.reduce((s, t) => s + t.unread, 0)}</span>
           )}
+          <span className={`inbox-ws-status ${connected ? 'online' : ''}`} title={connected ? 'Live' : 'Offline mode'}>
+            {connected ? <Wifi size={14} /> : <WifiOff size={14} />}
+          </span>
         </div>
       </div>
 
@@ -112,7 +148,7 @@ const Inbox = () => {
             <div className="inbox-search-wrap">
               <Search size={14} />
               <input className="inbox-search" type="text" value={search} onChange={e => setSearch(e.target.value)}
-                placeholder={lang === 'pt' ? 'Pesquisar…' : 'Search…'} />
+                placeholder={lang === 'pt' ? 'Pesquisar…' : lang === 'sv' ? 'Sök…' : 'Search…'} />
             </div>
             <div className="inbox-thread-list">
               {filteredThreads.map(t => (
@@ -182,7 +218,7 @@ const Inbox = () => {
                     <button className="inbox-compose-icon" type="button"><Paperclip size={16} /></button>
                     <button className="inbox-compose-icon" type="button"><Image size={16} /></button>
                   </div>
-                  <input className="inbox-compose-input" type="text" value={draft} onChange={e => setDraft(e.target.value)}
+                  <input className="inbox-compose-input" type="text" value={draft} onChange={handleDraftChange}
                     onKeyDown={e => e.key === 'Enter' && handleSend()}
                     placeholder={lang === 'pt' ? 'Escrever mensagem…' : lang === 'sv' ? 'Skriv ett meddelande…' : 'Write a message…'} />
                   <button className="inbox-compose-icon" type="button"><Smile size={16} /></button>

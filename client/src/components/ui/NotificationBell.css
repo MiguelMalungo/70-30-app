@@ -53,7 +53,7 @@
   flex-shrink: 0;
 }
 .notif-type-booking { background: #ecfdf5; color: #059669; }
-.notif-type-message { background: #eff6ff; color: #2563eb; }
+.notif-type-message { background: #f0f9f0; color: #193730; }
 .notif-type-escrow  { background: #fff7ed; color: #ea580c; }
 .notif-type-review  { background: #fefce8; color: #ca8a04; }
 
