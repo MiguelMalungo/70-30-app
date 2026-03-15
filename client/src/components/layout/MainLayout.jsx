@@ -3,6 +3,7 @@ import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useLang, T } from '../../context/LanguageContext';
 import { LogOut, Menu, X, ShoppingCart, ArrowLeft } from 'lucide-react';
+import NotificationBell from '../ui/NotificationBell';
 import logoImg from '../../assets/images/logo7030.png';
 import './MainLayout.css';
 
@@ -55,6 +56,7 @@ const MainLayout = () => {
                     {user && (
                         <div className="nav-user-info">
                             <span className="nav-role-badge">{user.role}</span>
+                            <NotificationBell />
                             <button onClick={handleLogout} className="nav-logout-btn" title="Logout">
                                 <LogOut size={18} />
                             </button>

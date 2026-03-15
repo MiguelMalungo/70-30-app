@@ -18,12 +18,14 @@ import ServiceDetailPage from '../pages/client/ServiceDetailPage';
 import Wizard from '../pages/client/Wizard';
 import MyBookingsPage from '../pages/client/MyBookingsPage';
 import ProfilePage from '../pages/client/ProfilePage';
+import ReviewPage from '../pages/client/ReviewPage';
 
 // Pro Pages (Mentor & Mentee / Apprentice)
 import ProDashboard from '../pages/pro/Dashboard';
 import Community from '../pages/pro/Community';
 import Inbox from '../pages/pro/Inbox';
 import Escrow from '../pages/pro/Escrow';
+import Calendar from '../pages/pro/Calendar';
 
 // Admin Page
 import AdminDashboard from '../pages/admin/Dashboard';
@@ -48,6 +50,7 @@ const AppRoutes = () => {
                     <Route path="/client/wizard" element={<Wizard />} />
                     <Route path="/client/bookings" element={<MyBookingsPage />} />
                     <Route path="/client/profile" element={<ProfilePage />} />
+                    <Route path="/client/reviews" element={<ReviewPage />} />
                 </Route>
 
                 {/* Pro Protected Routes (Mentor & Mentee) */}
@@ -56,6 +59,7 @@ const AppRoutes = () => {
                     <Route path="/pro/community" element={<Community />} />
                     <Route path="/pro/inbox" element={<Inbox />} />
                     <Route path="/pro/escrow" element={<Escrow />} />
+                    <Route path="/pro/calendar" element={<Calendar />} />
                 </Route>
 
                 {/* Admin Protected Routes */}
