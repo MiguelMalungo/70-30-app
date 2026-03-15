@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { T } from '../../context/LanguageContext';
 
 /**
  * Public demo-access route.
@@ -30,7 +31,7 @@ const Demo = () => {
             color: 'rgba(255,255,255,0.6)', fontFamily: 'var(--font-body, sans-serif)',
             fontSize: '1rem', letterSpacing: '0.02em',
         }}>
-            A carregar demo…
+            <T pt="A carregar demo…" en="Loading demo…" sv="Laddar demo…" />
         </div>
     );
 };

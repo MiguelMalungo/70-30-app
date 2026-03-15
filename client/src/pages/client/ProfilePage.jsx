@@ -166,7 +166,7 @@ const ProfilePage = () => {
               : <AlertCircle size={16} />
             }
             <span>{feedback.msg[lang] || feedback.msg.en}</span>
-            <button onClick={() => setFeedback(null)} className="pp-feedback-close" aria-label="Close">
+            <button onClick={() => setFeedback(null)} className="pp-feedback-close" aria-label={lang === 'pt' ? 'Fechar' : lang === 'sv' ? 'Stäng' : 'Close'}>
               <X size={14} />
             </button>
           </div>
