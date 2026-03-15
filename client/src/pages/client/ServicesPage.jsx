@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Search, ArrowRight, MapPin, SlidersHorizontal, X } from 'lucide-react';
 import { T, useLang } from '../../context/LanguageContext';
 import { CATEGORIES, getLabel } from '../../data/mockData';
+import imgOthers from '../../assets/images/others.png';
 import './ServicesPage.css';
 
 const CITIES = [
@@ -43,7 +44,7 @@ const ServicesPage = () => {
   return (
     <div className="services-page">
       {/* Hero Bar */}
-      <section className="sp-hero">
+      <section className="sp-hero" style={{ backgroundImage: `linear-gradient(135deg, rgba(25,55,48,0.85) 0%, rgba(13,40,24,0.75) 60%, rgba(25,55,48,0.85) 100%), url(${imgOthers})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
         <div className="container">
           <div className="sp-hero-inner">
             <div className="sp-hero-text">
