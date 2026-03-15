@@ -23,6 +23,7 @@ import ProfilePage from '../pages/client/ProfilePage';
 import ProDashboard from '../pages/pro/Dashboard';
 import Community from '../pages/pro/Community';
 import Inbox from '../pages/pro/Inbox';
+import Escrow from '../pages/pro/Escrow';
 
 // Admin Page
 import AdminDashboard from '../pages/admin/Dashboard';
@@ -54,6 +55,7 @@ const AppRoutes = () => {
                     <Route path="/pro" element={<ProDashboard />} />
                     <Route path="/pro/community" element={<Community />} />
                     <Route path="/pro/inbox" element={<Inbox />} />
+                    <Route path="/pro/escrow" element={<Escrow />} />
                 </Route>
 
                 {/* Admin Protected Routes */}

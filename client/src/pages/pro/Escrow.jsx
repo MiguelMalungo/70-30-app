@@ -1,0 +1,206 @@
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useAuth } from '../../context/AuthContext';
+import { T, useLang } from '../../context/LanguageContext';
+import {
+  Shield, ArrowRight, CheckCircle, Clock, AlertTriangle,
+  CreditCard, Lock, Unlock, ArrowDown, Banknote, UserCheck
+} from 'lucide-react';
+import './Escrow.css';
+
+const STEPS = [
+  { key: 'booked',    icon: CreditCard,   pt: 'Reserva feita',        en: 'Booking placed',     sv: 'Bokning gjord' },
+  { key: 'held',      icon: Lock,         pt: 'Pagamento retido',     en: 'Payment held',       sv: 'Betalning hållen' },
+  { key: 'service',   icon: UserCheck,    pt: 'Serviço realizado',    en: 'Service completed',  sv: 'Tjänst utförd' },
+  { key: 'released',  icon: Unlock,       pt: 'Pagamento libertado',  en: 'Payment released',   sv: 'Betalning frigiven' },
+  { key: 'paid',      icon: Banknote,     pt: 'Pro recebe',           en: 'Pro gets paid',      sv: 'Pro får betalt' },
+];
+
+const MOCK_ESCROW = {
+  id: 'ESC-20260315-001',
+  service: { pt: 'Reparação de canalização', en: 'Plumbing repair', sv: 'VVS-reparation' },
+  client: 'Carlos M.',
+  pro: 'Vítor Costa',
+  amount: 85.00,
+  fee: 25.50,
+  payout: 59.50,
+  status: 'held',
+  createdAt: '2026-03-14T10:30:00',
+};
+
+const Escrow = () => {
+  const { user } = useAuth();
+  const { lang } = useLang();
+  const t = (pt, en, sv) => ({ pt, en, sv }[lang] ?? en);
+
+  const [escrow, setEscrow] = useState(MOCK_ESCROW);
+  const [animating, setAnimating] = useState(false);
+
+  const currentIdx = STEPS.findIndex(s => s.key === escrow.status);
+
+  const advanceStep = () => {
+    if (animating || currentIdx >= STEPS.length - 1) return;
+    setAnimating(true);
+    setTimeout(() => {
+      setEscrow(prev => ({ ...prev, status: STEPS[currentIdx + 1].key }));
+      setAnimating(false);
+    }, 600);
+  };
+
+  const resetDemo = () => {
+    setEscrow({ ...MOCK_ESCROW, status: 'booked' });
+  };
+
+  const statusColor = (idx) => {
+    if (idx < currentIdx) return 'step-done';
+    if (idx === currentIdx) return 'step-active';
+    return 'step-pending';
+  };
+
+  return (
+    <div className="escrow-page">
+      {/* Hero */}
+      <div className="escrow-hero">
+        <div className="container escrow-hero-inner">
+          <div className="escrow-hero-text">
+            <p className="escrow-overline">
+              <Shield size={14} />
+              <T pt="Pagamento protegido" en="Protected payment" sv="Skyddad betalning" />
+            </p>
+            <h1><T pt="Sistema de Escrow" en="Escrow System" sv="Spärrsystem" /></h1>
+            <p><T
+              pt="Simulação do fluxo de pagamento seguro entre cliente e profissional."
+              en="Simulation of the secure payment flow between client and professional."
+              sv="Simulering av det säkra betalningsflödet mellan kund och yrkesman."
+            /></p>
+          </div>
+        </div>
+      </div>
+
+      <div className="container escrow-body">
+        {/* Flow Visualiser */}
+        <div className="escrow-flow-card">
+          <h2><T pt="Fluxo de pagamento" en="Payment flow" sv="Betalningsflöde" /></h2>
+
+          <div className="escrow-steps">
+            {STEPS.map((step, idx) => {
+              const Icon = step.icon;
+              const cls = statusColor(idx);
+              return (
+                <React.Fragment key={step.key}>
+                  <motion.div
+                    className={`escrow-step ${cls}`}
+                    initial={{ scale: 0.9, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ delay: idx * 0.08 }}
+                  >
+                    <div className="escrow-step-icon">
+                      {cls === 'step-done' ? <CheckCircle size={22} /> : <Icon size={22} />}
+                    </div>
+                    <span className="escrow-step-label">{step[lang] ?? step.en}</span>
+                  </motion.div>
+                  {idx < STEPS.length - 1 && (
+                    <div className={`escrow-arrow ${idx < currentIdx ? 'arrow-done' : ''}`}>
+                      <ArrowRight size={18} />
+                    </div>
+                  )}
+                </React.Fragment>
+              );
+            })}
+          </div>
+
+          {/* Action buttons */}
+          <div className="escrow-actions">
+            {currentIdx < STEPS.length - 1 ? (
+              <button className="escrow-btn-advance" onClick={advanceStep} disabled={animating}>
+                {animating ? (
+                  <><Clock size={16} /> <T pt="A processar…" en="Processing…" sv="Bearbetar…" /></>
+                ) : (
+                  <><ArrowDown size={16} /> <T pt="Avançar etapa" en="Advance step" sv="Gå vidare" /></>
+                )}
+              </button>
+            ) : (
+              <motion.div
+                className="escrow-complete-badge"
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: 'spring', stiffness: 300 }}
+              >
+                <CheckCircle size={20} />
+                <T pt="Pagamento concluído!" en="Payment complete!" sv="Betalning klar!" />
+              </motion.div>
+            )}
+            <button className="escrow-btn-reset" onClick={resetDemo}>
+              <T pt="Reiniciar demo" en="Reset demo" sv="Starta om demo" />
+            </button>
+          </div>
+        </div>
+
+        {/* Transaction Detail Card */}
+        <div className="escrow-detail-card">
+          <h3><T pt="Detalhes da transação" en="Transaction details" sv="Transaktionsdetaljer" /></h3>
+
+          <div className="escrow-detail-grid">
+            <div className="escrow-detail-row">
+              <span className="escrow-detail-label">ID</span>
+              <span className="escrow-detail-value mono">{escrow.id}</span>
+            </div>
+            <div className="escrow-detail-row">
+              <span className="escrow-detail-label"><T pt="Serviço" en="Service" sv="Tjänst" /></span>
+              <span className="escrow-detail-value">{escrow.service[lang] ?? escrow.service.en}</span>
+            </div>
+            <div className="escrow-detail-row">
+              <span className="escrow-detail-label"><T pt="Cliente" en="Client" sv="Kund" /></span>
+              <span className="escrow-detail-value">{escrow.client}</span>
+            </div>
+            <div className="escrow-detail-row">
+              <span className="escrow-detail-label"><T pt="Profissional" en="Professional" sv="Yrkesman" /></span>
+              <span className="escrow-detail-value">{escrow.pro}</span>
+            </div>
+
+            <hr className="escrow-divider" />
+
+            <div className="escrow-detail-row">
+              <span className="escrow-detail-label"><T pt="Valor total" en="Total amount" sv="Totalt belopp" /></span>
+              <span className="escrow-detail-value bold">€{escrow.amount.toFixed(2)}</span>
+            </div>
+            <div className="escrow-detail-row">
+              <span className="escrow-detail-label"><T pt="Taxa 70/30" en="70/30 fee" sv="70/30-avgift" /> (30%)</span>
+              <span className="escrow-detail-value fee">−€{escrow.fee.toFixed(2)}</span>
+            </div>
+            <div className="escrow-detail-row highlight">
+              <span className="escrow-detail-label"><T pt="Pagamento ao Pro" en="Pro payout" sv="Utbetalning till Pro" /> (70%)</span>
+              <span className="escrow-detail-value payout">€{escrow.payout.toFixed(2)}</span>
+            </div>
+          </div>
+
+          {/* Status indicator */}
+          <div className={`escrow-status-bar status-${escrow.status}`}>
+            {escrow.status === 'paid' ? <CheckCircle size={16} /> : escrow.status === 'held' ? <Lock size={16} /> : <Clock size={16} />}
+            <span>
+              {escrow.status === 'booked' && t('Reserva confirmada', 'Booking confirmed', 'Bokning bekräftad')}
+              {escrow.status === 'held' && t('Fundos retidos em escrow', 'Funds held in escrow', 'Medel hålls i spärr')}
+              {escrow.status === 'service' && t('Serviço em curso', 'Service in progress', 'Tjänst pågår')}
+              {escrow.status === 'released' && t('Pagamento a ser transferido', 'Payment being transferred', 'Betalning överförs')}
+              {escrow.status === 'paid' && t('Pagamento recebido', 'Payment received', 'Betalning mottagen')}
+            </span>
+          </div>
+        </div>
+
+        {/* Info Box */}
+        <div className="escrow-info-box">
+          <AlertTriangle size={18} />
+          <p>
+            <T
+              pt="Esta é uma simulação. Em produção, os pagamentos serão processados através de um gateway seguro (Stripe/PayPal) com escrow real."
+              en="This is a simulation. In production, payments will be processed through a secure gateway (Stripe/PayPal) with real escrow."
+              sv="Detta är en simulering. I produktion kommer betalningar att behandlas via en säker gateway (Stripe/PayPal) med riktig spärr."
+            />
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Escrow;

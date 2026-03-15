@@ -1,0 +1,48 @@
+services:
+  grandpa-backend:
+    container_name: 70-30-backend-prod
+    build: ./backend
+    command: gunicorn config.wsgi:application --bind 0.0.0.0:8000 --workers 3
+    volumes:
+      - static_volume:/app/staticfiles
+      - media_volume:/app/media
+    expose:
+      - "8000"
+    depends_on:
+      - grandpa-db
+      - grandpa-redis
+    env_file:
+      - .env.prod
+    restart: unless-stopped
+
+  grandpa-client:
+    container_name: 70-30-client-prod
+    build:
+      context: ./client
+      dockerfile: Dockerfile.prod
+      args:
+        VITE_API_URL: /api
+    ports:
+      - "80:80"
+    depends_on:
+      - grandpa-backend
+    restart: unless-stopped
+
+  grandpa-db:
+    container_name: 70-30-db-prod
+    image: postgis/postgis:15-3.3
+    volumes:
+      - postgres_prod_data:/var/lib/postgresql/data
+    env_file:
+      - .env.prod
+    restart: unless-stopped
+
+  grandpa-redis:
+    container_name: 70-30-redis-prod
+    image: redis:7-alpine
+    restart: unless-stopped
+
+volumes:
+  postgres_prod_data:
+  static_volume:
+  media_volume:
