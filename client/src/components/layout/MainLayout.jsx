@@ -63,7 +63,22 @@ const MainLayout = () => {
                         </div>
                     )}
 
-                    <ul className={`nav-links ${mobileOpen ? 'mobile-open' : ''}`}>
+                    {/* Auth pages: only back + lang switcher, no nav links */}
+                    {!user && isAuthPage && (
+                        <div className="nav-auth-controls">
+                            <button onClick={() => navigate('/')} className="nav-back-btn">
+                                <ArrowLeft size={15} />
+                                <T pt="Voltar" en="Back" sv="Tillbaka" />
+                            </button>
+                            <div className="nav-lang">
+                                <button onClick={() => setLang('pt')} className={lang === 'pt' ? 'active' : ''}>PT</button>
+                                <button onClick={() => setLang('en')} className={lang === 'en' ? 'active' : ''}>EN</button>
+                                <button onClick={() => setLang('sv')} className={lang === 'sv' ? 'active' : ''}>SV</button>
+                            </div>
+                        </div>
+                    )}
+
+                    <ul className={`nav-links ${mobileOpen ? 'mobile-open' : ''} ${isAuthPage && !user ? 'nav-links-hidden' : ''}`}>
                         {!user ? (
                             <>
                                 {!isAuthPage && (
@@ -76,27 +91,21 @@ const MainLayout = () => {
                                     </>
                                 )}
 
+                                {!isAuthPage && (
                                 <li className="nav-actions-wrapper">
                                     <div className="nav-top-row">
-                                        {isAuthPage && (
-                                            <button onClick={() => navigate('/')} className="nav-back-btn">
-                                                <ArrowLeft size={15} />
-                                                <T pt="Voltar" en="Back" sv="Tillbaka" />
-                                            </button>
-                                        )}
                                         <div className="nav-lang">
                                             <button onClick={() => setLang('pt')} className={lang === 'pt' ? 'active' : ''}>PT</button>
                                             <button onClick={() => setLang('en')} className={lang === 'en' ? 'active' : ''}>EN</button>
                                             <button onClick={() => setLang('sv')} className={lang === 'sv' ? 'active' : ''}>SV</button>
                                         </div>
-                                        {!isAuthPage && (
-                                            <button className="nav-cart-btn" title="Cart">
-                                                <ShoppingCart size={18} />
-                                                <span className={`cart-badge ${cartCount === 0 ? 'empty' : ''}`}>{cartCount}</span>
-                                            </button>
-                                        )}
+                                        <button className="nav-cart-btn" title="Cart">
+                                            <ShoppingCart size={18} />
+                                            <span className={`cart-badge ${cartCount === 0 ? 'empty' : ''}`}>{cartCount}</span>
+                                        </button>
                                     </div>
                                 </li>
+                                )}
                             </>
                         ) : (
                             <>

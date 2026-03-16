@@ -135,6 +135,15 @@
   gap: 10px;
 }
 
+/* ─── Auth pages: only back + lang, no nav links ─── */
+.nav-links-hidden { display: none !important; }
+.nav-auth-controls {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-left: auto;
+}
+
 /* ─── Auth pages back button ─── */
 .nav-back-btn {
     display: inline-flex;
