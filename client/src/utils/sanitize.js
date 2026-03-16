@@ -103,6 +103,122 @@ export function createRateLimiter(maxActions, windowMs) {
   };
 }
 
+// ── Search query sanitizer ──
+
+/**
+ * Sanitize a search query:
+ * - Trim whitespace
+ * - Remove special regex characters
+ * - Limit to 100 characters
+ */
+export function sanitizeSearchQuery(str) {
+  if (typeof str !== 'string') return '';
+  return str
+    .trim()
+    .replace(/[.*+?^${}()|[\]\\]/g, '')
+    .slice(0, 100);
+}
+
+// ── Payment field sanitizers ──
+
+/**
+ * Sanitize a card number: keep only digits, max 16.
+ */
+export function sanitizeCardNumber(str) {
+  if (typeof str !== 'string') return '';
+  return str.replace(/\D/g, '').slice(0, 16);
+}
+
+/**
+ * Sanitize an expiry field: keep only digits and /, format as MM/YY.
+ */
+export function sanitizeExpiry(str) {
+  if (typeof str !== 'string') return '';
+  const digits = str.replace(/[^0-9]/g, '').slice(0, 4);
+  if (digits.length >= 3) return digits.slice(0, 2) + '/' + digits.slice(2);
+  return digits;
+}
+
+/**
+ * Sanitize a CVC field: keep only digits, max 4.
+ */
+export function sanitizeCVC(str) {
+  if (typeof str !== 'string') return '';
+  return str.replace(/\D/g, '').slice(0, 4);
+}
+
+// ── Address sanitizer ──
+
+/**
+ * Sanitize an address field:
+ * - Trim whitespace
+ * - Remove HTML tags
+ * - Max 200 characters
+ */
+export function sanitizeAddress(str) {
+  if (typeof str !== 'string') return '';
+  return str
+    .trim()
+    .replace(/<[^>]*>/g, '')
+    .slice(0, 200);
+}
+
+// ── Validation helpers ──
+
+/**
+ * Validate an email address (basic regex check).
+ */
+export function validateEmail(str) {
+  if (typeof str !== 'string') return false;
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(str.trim());
+}
+
+/**
+ * Validate a phone number:
+ * - Allows +, digits, spaces, dashes
+ * - Minimum 9 digits
+ */
+export function validatePhone(str) {
+  if (typeof str !== 'string') return false;
+  // Check that only allowed characters are present
+  if (!/^[+\d\s\-()]+$/.test(str.trim())) return false;
+  // Count actual digits
+  const digitCount = (str.match(/\d/g) || []).length;
+  return digitCount >= 9;
+}
+
+// ── Key-based rate limiter ──
+
+const _rateLimiterStore = {};
+
+/**
+ * Client-side rate limiter keyed by an arbitrary string.
+ * Returns { allowed: boolean, retryAfterMs: number }.
+ */
+export function rateLimiter(key, maxPerMinute = 30) {
+  const now = Date.now();
+  const windowMs = 60000;
+
+  if (!_rateLimiterStore[key]) {
+    _rateLimiterStore[key] = [];
+  }
+
+  const timestamps = _rateLimiterStore[key];
+
+  // Remove expired entries
+  while (timestamps.length && timestamps[0] <= now - windowMs) {
+    timestamps.shift();
+  }
+
+  if (timestamps.length >= maxPerMinute) {
+    const retryAfterMs = timestamps[0] + windowMs - now;
+    return { allowed: false, retryAfterMs };
+  }
+
+  timestamps.push(now);
+  return { allowed: true, retryAfterMs: 0 };
+}
+
 /**
  * Debounced validator — returns validation errors after user stops typing.
  */

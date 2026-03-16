@@ -7,6 +7,7 @@ import {
 import { T, useLang } from '../../context/LanguageContext';
 import { CATEGORIES, SUBCATEGORIES, PROFESSIONALS, getLabel } from '../../data/mockData';
 import { mentorSearchAPI } from '../../services/api';
+import useAnalytics, { AnalyticsEvents } from '../../hooks/useAnalytics';
 import './ServiceDetailPage.css';
 
 /* Map a backend mentor-search result → frontend pro card shape */
@@ -35,10 +36,18 @@ const ServiceDetailPage = () => {
   const { category, sub } = useParams();
   const { lang } = useLang();
   const navigate = useNavigate();
+  const { track, trackPageView } = useAnalytics();
 
   const cat = CATEGORIES.find(c => c.slug === category);
   const subs = SUBCATEGORIES[category] || [];
   const service = subs.find(s => s.slug === sub);
+
+  useEffect(() => { trackPageView('service_detail'); }, []);
+  useEffect(() => {
+    if (category && sub) {
+      track(AnalyticsEvents.SERVICE_VIEWED, { category, sub });
+    }
+  }, [category, sub]);
 
   // ── Professionals: real API with mock fallback ──
   const [availablePros, setAvailablePros] = useState([]);

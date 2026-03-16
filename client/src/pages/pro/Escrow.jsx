@@ -11,7 +11,7 @@ import {
 import imgPayment from '../../assets/images/payment.webp';
 import PageMeta from '../../components/ui/PageMeta';
 import useAnalytics, { AnalyticsEvents } from '../../hooks/useAnalytics';
-import { createRateLimiter } from '../../utils/sanitize';
+import { createRateLimiter, sanitizeCardNumber, sanitizeExpiry, sanitizeCVC } from '../../utils/sanitize';
 import './Escrow.css';
 
 const paymentLimiter = createRateLimiter(3, 30000); // max 3 payment attempts per 30s
@@ -89,14 +89,12 @@ const Escrow = () => {
   };
 
   const formatCardNumber = (val) => {
-    const digits = val.replace(/\D/g, '').slice(0, 16);
+    const digits = sanitizeCardNumber(val);
     return digits.replace(/(.{4})/g, '$1 ').trim();
   };
 
   const formatExpiry = (val) => {
-    const digits = val.replace(/\D/g, '').slice(0, 4);
-    if (digits.length >= 3) return digits.slice(0, 2) + '/' + digits.slice(2);
-    return digits;
+    return sanitizeExpiry(val);
   };
 
   const statusColor = (idx) => {
@@ -186,7 +184,7 @@ const Escrow = () => {
                     type="text"
                     placeholder="123"
                     value={cardCvc}
-                    onChange={e => setCardCvc(e.target.value.replace(/\D/g, '').slice(0, 4))}
+                    onChange={e => setCardCvc(sanitizeCVC(e.target.value))}
                     className="escrow-input"
                   />
                 </div>

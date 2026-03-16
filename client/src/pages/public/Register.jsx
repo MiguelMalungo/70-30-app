@@ -12,6 +12,7 @@ import {
     EyeOff,
 } from 'lucide-react';
 import shakeImg from '../../assets/images/shake.webp';
+import PageMeta from '../../components/ui/PageMeta';
 import './Auth.css';
 
 const Register = () => {
@@ -115,6 +116,7 @@ const Register = () => {
 
     return (
         <div className="auth-page reg-shake-bg">
+            <PageMeta title={lang === 'pt' ? 'Registar' : lang === 'sv' ? 'Registrera' : 'Register'} />
             {/* Shake image background */}
             <div className="auth-shake-bg">
                 <img src={shakeImg} alt="" aria-hidden="true" loading="lazy" />

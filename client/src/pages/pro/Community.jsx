@@ -3,7 +3,9 @@ import { motion } from 'framer-motion';
 import { T, useLang } from '../../context/LanguageContext';
 import { Search, Star, MapPin, Briefcase, Users, Filter, ChevronRight } from 'lucide-react';
 import { mentorSearchAPI } from '../../services/api';
+import useAnalytics, { AnalyticsEvents } from '../../hooks/useAnalytics';
 import imgCommunity from '../../assets/images/community.webp';
+import PageMeta from '../../components/ui/PageMeta';
 import './Community.css';
 
 const MOCK_PROS = [
@@ -36,10 +38,13 @@ const StarRating = ({ value }) => (
 
 const Community = () => {
   const { lang } = useLang();
+  const { track, trackPageView } = useAnalytics();
   const [pros, setPros] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [roleFilter, setRoleFilter] = useState('ALL');
+
+  useEffect(() => { trackPageView('community'); }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -86,6 +91,7 @@ const Community = () => {
 
   return (
     <div className="community-page">
+      <PageMeta title={lang === 'pt' ? 'Comunidade' : lang === 'sv' ? 'Gemenskap' : 'Community'} />
       {/* Hero */}
       <div className="community-hero" style={{ backgroundImage: `linear-gradient(135deg, rgba(25,55,48,0.88) 0%, rgba(13,43,34,0.75) 60%, rgba(25,55,48,0.88) 100%), url(${imgCommunity})`, backgroundSize: 'cover', backgroundPosition: 'top' }}>
         <div className="container community-hero-inner">
@@ -111,6 +117,7 @@ const Community = () => {
               type="text"
               value={search}
               onChange={e => setSearch(e.target.value)}
+              onKeyDown={e => { if (e.key === 'Enter' && search.trim()) track(AnalyticsEvents.SEARCH_PERFORMED, { query: search }); }}
               placeholder={lang === 'pt' ? 'Pesquisar por nome, especialidade ou localização…' : lang === 'sv' ? 'Sök namn, specialitet eller plats…' : 'Search name, skill or location…'}
             />
           </div>

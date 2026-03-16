@@ -7,7 +7,9 @@ import {
 } from 'lucide-react';
 import { T, useLang } from '../../context/LanguageContext';
 import { bookingsAPI, reviewsAPI } from '../../services/api';
+import useAnalytics, { AnalyticsEvents } from '../../hooks/useAnalytics';
 import { MOCK_BOOKINGS, CATEGORIES, getLabel } from '../../data/mockData';
+import PageMeta from '../../components/ui/PageMeta';
 import './MyBookingsPage.css';
 
 /* ── Tab definitions ── */
@@ -55,6 +57,7 @@ const mapBackendBooking = (b) => {
 
 const MyBookingsPage = () => {
   const { lang } = useLang();
+  const { track, trackPageView } = useAnalytics();
   const [activeTab, setActiveTab] = useState('ALL');
   const [reviewBooking, setReviewBooking] = useState(null);
   const [reviewRating, setReviewRating] = useState(0);
@@ -65,6 +68,8 @@ const MyBookingsPage = () => {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(null); // id of booking being acted on
+
+  useEffect(() => { trackPageView('my_bookings'); }, []);
 
   // Fetch real bookings from API, fall back to mock data
   useEffect(() => {
@@ -112,6 +117,7 @@ const MyBookingsPage = () => {
 
   const handleSubmitReview = async () => {
     if (!reviewRating) return;
+    track(AnalyticsEvents.REVIEW_SUBMITTED, { bookingId: reviewBooking.id });
     setActionLoading(reviewBooking.id);
     try {
       await reviewsAPI.create({
@@ -140,6 +146,7 @@ const MyBookingsPage = () => {
 
   return (
     <div className="bookings-page">
+      <PageMeta title={lang === 'pt' ? 'Reservas' : lang === 'sv' ? 'Bokningar' : 'Bookings'} />
       {/* Hero */}
       <div className="mbp-hero">
         <img src={stepSchedule} alt="" className="mbp-hero-img" aria-hidden="true" loading="lazy" />

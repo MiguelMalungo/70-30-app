@@ -8,8 +8,10 @@ import {
   AlertCircle, Hourglass, Banknote, TrendingUp, X,
 } from 'lucide-react';
 import { bookingsAPI } from '../../services/api';
+import useAnalytics from '../../hooks/useAnalytics';
 import imgMentor from '../../assets/images/cat-eletricidade.webp';
 import imgApprentice from '../../assets/images/aprentice.webp';
+import PageMeta from '../../components/ui/PageMeta';
 import './Dashboard.css';
 
 const STATUS_CONFIG = {
@@ -104,12 +106,15 @@ const JobDetailsModal = ({ booking, onClose, onAccept, onReject, actionLoading, 
 const ProDashboard = () => {
   const { user } = useAuth();
   const { lang } = useLang();
+  const { trackPageView } = useAnalytics();
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [actionLoading, setActionLoading] = useState(null);
   const firstName = user?.firstName || user?.username || 'Pro';
   const heroImg = user?.role === 'APPRENTICE' ? imgApprentice : imgMentor;
+
+  useEffect(() => { trackPageView('pro_dashboard'); }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -152,6 +157,7 @@ const ProDashboard = () => {
 
   return (
     <div className="pro-dashboard">
+      <PageMeta title={lang === 'pt' ? 'Painel Pro' : lang === 'sv' ? 'Pro Instrumentpanel' : 'Pro Dashboard'} />
       <div className="pro-hero" style={{ backgroundImage: `linear-gradient(135deg, rgba(25,55,48,0.88) 0%, rgba(13,43,34,0.75) 60%, rgba(25,55,48,0.88) 100%), url(${heroImg})`, backgroundPosition: 'top' }}>
         <div className="container pro-hero-inner">
           <div className="pro-hero-text">

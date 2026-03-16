@@ -7,6 +7,7 @@ import {
   Clock, CheckCircle, AlertCircle, ChevronRight, Sparkles, Loader,
 } from 'lucide-react';
 import { bookingsAPI } from '../../services/api';
+import useAnalytics from '../../hooks/useAnalytics';
 import { CATEGORIES, MOCK_BOOKINGS, getLabel } from '../../data/mockData';
 import stepReceiveImg from '../../assets/images/step-receive.webp';
 import PageMeta from '../../components/ui/PageMeta';
@@ -47,11 +48,14 @@ const mapBackendBooking = (b) => {
 const Dashboard = () => {
   const { user } = useAuth();
   const { lang } = useLang();
+  const { trackPageView } = useAnalytics();
   const [bookings, setBookings] = useState([]);
   const [loadingBookings, setLoadingBookings] = useState(true);
 
   const firstName = user?.firstName || user?.username || 'Cliente';
   const topCategories = CATEGORIES.slice(0, 8);
+
+  useEffect(() => { trackPageView('client_dashboard'); }, []);
 
   // Fetch real bookings from API, fall back to mock data
   useEffect(() => {

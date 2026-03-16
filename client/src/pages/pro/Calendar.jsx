@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { T, useLang } from '../../context/LanguageContext';
 import { ChevronLeft, ChevronRight, Clock, MapPin, User } from 'lucide-react';
 import imgScheduling from '../../assets/images/smart_scheduling.webp';
+import PageMeta from '../../components/ui/PageMeta';
 import './Calendar.css';
 
 const WEEKDAYS_PT = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
@@ -49,6 +50,7 @@ const Calendar = () => {
 
   return (
     <div className="cal-page">
+      <PageMeta title={lang === 'pt' ? 'Calendário' : lang === 'sv' ? 'Kalender' : 'Calendar'} />
       <div className="cal-hero" style={{ backgroundImage: `linear-gradient(135deg, rgba(25,55,48,0.88) 0%, rgba(13,43,34,0.75) 60%, rgba(25,55,48,0.88) 100%), url(${imgScheduling})`, backgroundSize: 'cover', backgroundPosition: 'top' }}>
         <div className="container">
           <p className="cal-overline"><T pt="Agenda profissional" en="Professional schedule" sv="Professionellt schema" /></p>

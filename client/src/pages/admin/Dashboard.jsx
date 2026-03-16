@@ -6,6 +6,7 @@ import {
   TrendingUp, Search, ChevronDown, ChevronUp,
 } from 'lucide-react';
 import api from '../../services/api';
+import PageMeta from '../../components/ui/PageMeta';
 import './Dashboard.css';
 
 /* ── Mock data ── */
@@ -78,6 +79,7 @@ const AdminDashboard = () => {
 
   return (
     <div className="admin-dashboard">
+      <PageMeta title="Admin" />
       {/* Header */}
       <div className="admin-hero">
         <div className="container admin-hero-inner">

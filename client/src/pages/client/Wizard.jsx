@@ -10,7 +10,7 @@ import { bookingsAPI } from '../../services/api';
 import { CATEGORIES, SUBCATEGORIES, PROFESSIONALS, getLabel } from '../../data/mockData';
 import PageMeta from '../../components/ui/PageMeta';
 import useAnalytics, { AnalyticsEvents } from '../../hooks/useAnalytics';
-import { sanitizeText } from '../../utils/sanitize';
+import { sanitizeText, sanitizeAddress } from '../../utils/sanitize';
 import './Wizard.css';
 
 /* ── Time slots ── */
@@ -374,7 +374,7 @@ const Wizard = () => {
                 type="text"
                 placeholder={lang === 'sv' ? 'Rua dos Exemplos, 12, Lisboa' : lang === 'en' ? 'Rua dos Exemplos, 12, Lisbon' : 'Rua dos Exemplos, 12, Lisboa'}
                 value={address}
-                onChange={e => setAddress(e.target.value)}
+                onChange={e => setAddress(sanitizeAddress(e.target.value))}
               />
 
               <label className="wz-label" style={{ marginTop: 24 }}>
@@ -391,7 +391,7 @@ const Wizard = () => {
                     : 'Descreve o problema em detalhe para que o profissional possa vir preparado...'
                 }
                 value={description}
-                onChange={e => setDescription(e.target.value)}
+                onChange={e => setDescription(sanitizeText(e.target.value, 2000))}
               />
 
               <div className="wz-info-box">

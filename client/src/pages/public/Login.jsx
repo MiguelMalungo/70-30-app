@@ -3,6 +3,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useLang, T } from '../../context/LanguageContext';
 import { Award, Sprout, ArrowRight, AlertCircle, Eye, EyeOff } from 'lucide-react';
+import PageMeta from '../../components/ui/PageMeta';
 import './Auth.css';
 
 const Login = () => {
@@ -65,6 +66,7 @@ const Login = () => {
 
     return (
         <div className="auth-page">
+            <PageMeta title="Login" />
             {/* Video background */}
             <div className="auth-video-bg">
                 <video autoPlay muted loop playsInline>

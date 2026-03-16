@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
     LogIn, Search, CalendarClock, Home as HouseCheck,
@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { useLang, T } from '../../context/LanguageContext';
 import PageMeta from '../../components/ui/PageMeta';
+import useAnalytics from '../../hooks/useAnalytics';
 import './Home.css';
 
 /* ── Images ────────────────────────────────────────────────── */
@@ -44,6 +45,9 @@ const t = (lang, pt, en, sv) => ({ pt, en, sv })[lang] || en;
 const Home = () => {
     const [openFaq, setOpenFaq] = useState(null);
     const { lang } = useLang();
+    const { trackPageView } = useAnalytics();
+
+    useEffect(() => { trackPageView('home'); }, []);
 
     const pageTitle = lang === 'pt' ? 'Início' : lang === 'sv' ? 'Hem' : 'Home';
 

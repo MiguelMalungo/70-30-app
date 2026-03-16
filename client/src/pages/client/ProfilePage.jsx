@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { reviewsAPI } from '../../services/api';
 import shakeImg from '../../assets/images/shake.webp';
+import PageMeta from '../../components/ui/PageMeta';
 import './ProfilePage.css';
 
 /* ── Helpers ─────────────────────────────────────────────── */
@@ -135,6 +136,7 @@ const ProfilePage = () => {
   /* ── Render ── */
   return (
     <div className="profile-page">
+      <PageMeta title={lang === 'pt' ? 'Perfil' : lang === 'sv' ? 'Profil' : 'Profile'} />
 
       {/* ── Hero ── */}
       <section className="pp-hero">
@@ -143,7 +145,7 @@ const ProfilePage = () => {
         <div className="container pp-hero-inner">
           <div className="pp-avatar-wrap">
             {user?.avatar
-              ? <img src={user.avatar} alt={fullName} className="pp-avatar-img" />
+              ? <img src={user.avatar} alt={fullName} className="pp-avatar-img" loading="lazy" />
               : <div className="pp-avatar-initials">{initials}</div>
             }
           </div>
