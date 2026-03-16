@@ -26,6 +26,9 @@ urlpatterns = [
     path('api/skills/', include('skills.urls')),
     path('api/bookings/', include('bookings.urls')),
     path('api/reviews/', include('reviews.urls')),
+    path('api/chat/', include('chat.urls')),
+    path('api/push/', include('notifications.urls')),
+    path('api/payments/', include('payments.urls')),
     path('api/mentors/search/', MentorSearchView.as_view(), name='mentor-search'),
 
     # Swagger Documentation
