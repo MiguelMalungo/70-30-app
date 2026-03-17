@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import { ArrowLeft, Clock, ArrowRight, Users } from 'lucide-react';
 import { T, useLang } from '../../context/LanguageContext';
 import { CATEGORIES, SUBCATEGORIES, getLabel } from '../../data/mockData';
+import PageMeta from '../../components/ui/PageMeta';
 import './CategoryPage.css';
 
 const CategoryPage = () => {
@@ -25,6 +26,7 @@ const CategoryPage = () => {
 
   return (
     <div className="category-page">
+      <PageMeta title={cat ? getLabel(cat.name, lang) : 'Category'} />
       {/* ── Hero ── */}
       <section className="cp-hero" style={{ backgroundImage: `url(${cat.image})` }}>
         <div className="cp-hero-overlay" />

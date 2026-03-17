@@ -8,6 +8,7 @@ import { T, useLang } from '../../context/LanguageContext';
 import { CATEGORIES, SUBCATEGORIES, PROFESSIONALS, getLabel } from '../../data/mockData';
 import { mentorSearchAPI } from '../../services/api';
 import useAnalytics, { AnalyticsEvents } from '../../hooks/useAnalytics';
+import PageMeta from '../../components/ui/PageMeta';
 import './ServiceDetailPage.css';
 
 /* Map a backend mentor-search result → frontend pro card shape */
@@ -42,6 +43,7 @@ const ServiceDetailPage = () => {
   const subs = SUBCATEGORIES[category] || [];
   const service = subs.find(s => s.slug === sub);
 
+  const serviceLabel = service ? getLabel(service.name, lang) : '';
   useEffect(() => { trackPageView('service_detail'); }, []);
   useEffect(() => {
     if (category && sub) {
@@ -136,6 +138,7 @@ const ServiceDetailPage = () => {
 
   return (
     <div className="service-detail-page">
+      <PageMeta title={serviceLabel || (lang === 'pt' ? 'Detalhes' : lang === 'sv' ? 'Detaljer' : 'Details')} />
       <div className="container">
         <div className="sdp-layout">
           {/* ── Main Content ── */}

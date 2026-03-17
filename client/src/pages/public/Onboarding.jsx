@@ -6,6 +6,7 @@ import {
   CreditCard, Bell, Wrench, BookOpen, Leaf, Zap,
   Hammer, Paintbrush, Droplets, Settings2,
 } from 'lucide-react';
+import PageMeta from '../../components/ui/PageMeta';
 import './Onboarding.css';
 
 const INTEREST_AREAS = [
@@ -169,6 +170,7 @@ const Onboarding = () => {
 
   return (
     <div className="onboarding-page">
+      <PageMeta title={lang === 'pt' ? 'Configuração' : lang === 'sv' ? 'Konfiguration' : 'Setup'} />
       <div className="onboarding-card">
         <div className="ob-progress">
           <div className="ob-progress-step done"><Check size={14} /><span><T pt="Conta criada" en="Account created" sv="Konto skapat" /></span></div>

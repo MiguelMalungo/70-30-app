@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { T } from '../../context/LanguageContext';
+import PageMeta from '../../components/ui/PageMeta';
 
 /**
  * Public demo-access route.
@@ -27,10 +28,11 @@ const Demo = () => {
     return (
         <div style={{
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            height: '100vh', background: '#0f172a',
+            height: '100vh', background: '#193730',
             color: 'rgba(255,255,255,0.6)', fontFamily: 'var(--font-body, sans-serif)',
             fontSize: '1rem', letterSpacing: '0.02em',
         }}>
+            <PageMeta title="Demo" />
             <T pt="A carregar demo…" en="Loading demo…" sv="Laddar demo…" />
         </div>
     );
