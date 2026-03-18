@@ -48,7 +48,7 @@ const Home = () => {
     const { lang } = useLang();
     const { user } = useAuth();
     const { trackPageView } = useAnalytics();
-    const servicesLink = user ? '/client/services' : '/register?role=MENTEE';
+    const servicesLink = user ? '/client/services' : '/register?role=CLIENT';
 
     useEffect(() => { trackPageView('home'); }, []);
 

@@ -10,6 +10,7 @@ import {
     CheckCircle,
     Eye,
     EyeOff,
+    Home as HomeIcon,
 } from 'lucide-react';
 import shakeImg from '../../assets/images/shake.webp';
 import PageMeta from '../../components/ui/PageMeta';
@@ -22,10 +23,10 @@ const Register = () => {
     const { lang } = useLang();
     const t = (pt, en, sv) => ({ pt, en, sv }[lang] ?? en);
 
-    // Role comes from URL param: /register?role=MENTOR or /register?role=MENTEE
+    // Role comes from URL param: /register?role=CLIENT, MENTOR, or MENTEE
     const roleFromUrl = searchParams.get('role')?.toUpperCase();
     const [selectedRole, setSelectedRole] = useState(
-        ['MENTOR', 'MENTEE'].includes(roleFromUrl) ? roleFromUrl : null
+        ['CLIENT', 'MENTOR', 'MENTEE'].includes(roleFromUrl) ? roleFromUrl : null
     );
 
     const [form, setForm] = useState({
@@ -42,6 +43,7 @@ const Register = () => {
     const [success, setSuccess] = useState(false);
     const [submitting, setSubmitting] = useState(false);
 
+    const isClient = selectedRole === 'CLIENT';
     const isApprentice = selectedRole === 'MENTEE';
 
     const handleChange = (e) => {
@@ -127,12 +129,20 @@ const Register = () => {
 
                 {/* Role badge when role is known; inline toggle when it's not */}
                 {selectedRole ? (
-                    <div className={`auth-role-indicator ${isApprentice ? 'apprentice' : 'mentor'}`}>
-                        {isApprentice ? <Sprout size={16} /> : <Award size={16} />}
-                        {isApprentice ? t('Aprendiz', 'Apprentice', 'Lärling') : 'Mentor'}
+                    <div className={`auth-role-indicator ${isClient ? 'client' : isApprentice ? 'apprentice' : 'mentor'}`}>
+                        {isClient ? <HomeIcon size={16} /> : isApprentice ? <Sprout size={16} /> : <Award size={16} />}
+                        {isClient ? t('Cliente', 'Client', 'Kund') : isApprentice ? t('Aprendiz', 'Apprentice', 'Lärling') : 'Mentor'}
                     </div>
                 ) : (
                     <div className="reg-role-toggle">
+                        <button
+                            type="button"
+                            className={`reg-role-toggle-btn client${selectedRole === 'CLIENT' ? ' active' : ''}`}
+                            onClick={() => setSelectedRole('CLIENT')}
+                        >
+                            <HomeIcon size={14} />
+                            <T pt="Cliente" en="Client" sv="Kund" />
+                        </button>
                         <button
                             type="button"
                             className={`reg-role-toggle-btn mentor${selectedRole === 'MENTOR' ? ' active' : ''}`}
