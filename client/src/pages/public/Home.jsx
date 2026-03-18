@@ -7,6 +7,7 @@ import {
     Star, ShieldCheck, Headphones, ChevronDown, ArrowRight,
     Briefcase, BookOpen,
 } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
 import { useLang, T } from '../../context/LanguageContext';
 import PageMeta from '../../components/ui/PageMeta';
 import useAnalytics from '../../hooks/useAnalytics';
@@ -45,7 +46,9 @@ const t = (lang, pt, en, sv) => ({ pt, en, sv })[lang] || en;
 const Home = () => {
     const [openFaq, setOpenFaq] = useState(null);
     const { lang } = useLang();
+    const { user } = useAuth();
     const { trackPageView } = useAnalytics();
+    const servicesLink = user ? '/client/services' : '/register?role=MENTEE';
 
     useEffect(() => { trackPageView('home'); }, []);
 
@@ -391,7 +394,7 @@ const Home = () => {
                     <h2><T pt={<>O teu serviço, <em>a um toque.</em></>} en={<>Your service, <em>one tap away.</em></>} sv={<>Din tjänst, <em>ett tryck bort.</em></>} /></h2>
                     <p><T pt="Descarrega a app e acede a centenas de profissionais verificados na tua zona. Grátis para clientes." en="Download the app and access hundreds of verified professionals in your area. Free for clients." sv="Ladda ner appen och få tillgång till hundratals verifierade proffs i ditt område. Gratis för kunder." /></p>
                     <div className="cta-actions">
-                        <a href="#services" className="btn-cta-green"><Wrench size={18} /> <T pt="Pedir um serviço" en="Request a service" sv="Begär en tjänst" /></a>
+                        <Link to={servicesLink} className="btn-cta-green"><Wrench size={18} /> <T pt="Pedir um serviço" en="Request a service" sv="Begär en tjänst" /></Link>
                         <Link to="/login" className="btn-cta-ghost"><T pt="Entrar na plataforma" en="Sign in to platform" sv="Logga in på plattformen" /> <ArrowRight size={18} /></Link>
                     </div>
                 </div>
@@ -403,7 +406,7 @@ const Home = () => {
                     <div className="popular-inner">
                         <span className="popular-label"><T pt="Pesquisas populares" en="Popular searches" sv="Populära sökningar" /></span>
                         <div className="popular-links">
-                            {POPULAR.map((p) => <a href="#services" className="popular-link" key={p}>{p}</a>)}
+                            {POPULAR.map((p) => <Link to={servicesLink} className="popular-link" key={p}>{p}</Link>)}
                         </div>
                     </div>
                 </div>
