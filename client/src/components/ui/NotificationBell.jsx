@@ -6,11 +6,13 @@ import './NotificationBell.css';
 
 const TYPE_ICONS = { booking: CalendarCheck, message: MessageSquare, escrow: CreditCard, review: Star };
 
-const NotificationBell = () => {
+const NotificationBell = ({ scrolled = false }) => {
   const { notifications, unreadCount, markRead, markAllRead } = useNotifications();
   const { lang } = useLang();
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
+  const btnRef = useRef(null);
+  const [dropStyle, setDropStyle] = useState({});
 
   useEffect(() => {
     const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
@@ -18,18 +20,25 @@ const NotificationBell = () => {
     return () => document.removeEventListener('mousedown', handler);
   }, []);
 
+  useEffect(() => {
+    if (open && btnRef.current) {
+      const rect = btnRef.current.getBoundingClientRect();
+      setDropStyle({ top: rect.bottom + 8 });
+    }
+  }, [open]);
+
   return (
     <div className="notif-bell-wrap" ref={ref}>
-      <button className="notif-bell-btn" onClick={() => setOpen(!open)}>
+      <button className={`notif-bell-btn ${scrolled ? 'notif-bell-dark' : 'notif-bell-light'}`} ref={btnRef} onClick={() => setOpen(!open)}>
         <Bell size={18} />
         {unreadCount > 0 && <span className="notif-bell-badge">{unreadCount}</span>}
       </button>
 
       {open && (
-        <div className="notif-dropdown">
+        <div className="notif-dropdown" style={dropStyle}>
           <div className="notif-dropdown-header">
             <span className="notif-dropdown-title">
-              <T pt="Notificações" en="Notifications" sv="Notifikationer" />
+              <Bell size={15} /> <T pt="Notificações" en="Notifications" sv="Notifikationer" />
             </span>
             {unreadCount > 0 && (
               <button className="notif-mark-all" onClick={markAllRead}>

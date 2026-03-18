@@ -56,7 +56,6 @@ const MainLayout = () => {
                     {user && (
                         <div className="nav-user-info">
                             <span className="nav-role-badge">{user.role}</span>
-                            <NotificationBell />
                             <button onClick={handleLogout} className="nav-logout-btn" title="Logout">
                                 <LogOut size={18} />
                             </button>
@@ -145,6 +144,7 @@ const MainLayout = () => {
                                             <button onClick={() => setLang('en')} className={lang === 'en' ? 'active' : ''}>EN</button>
                                             <button onClick={() => setLang('sv')} className={lang === 'sv' ? 'active' : ''}>SV</button>
                                         </div>
+                                        <NotificationBell scrolled={scrolled} />
                                     </div>
                                 </li>
                             </>
